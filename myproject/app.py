@@ -1,7 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 import spacy
 app = Flask(__name__)
-@app.route('/')
+@app.route('/', methods = ['GET', 'POST'])
 
 def index():
 
@@ -39,7 +39,7 @@ def index():
 		"too long" : toolong, "complex" : complexity
 	}
 
-	return Flask.jsonify(data)
+	return jsonify(data)
 
 def stringReturn(s):
 	return s
