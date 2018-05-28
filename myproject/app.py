@@ -1,9 +1,35 @@
 from flask import Flask, render_template, request, jsonify
 import spacy
+import nltk
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
 @app.route('/', methods = ['GET', 'POST'])
-
 def index():
+	#print("hello")
+	emaildata = request.get_json()
+	#print(emaildata)
+	#print(emaildata.get("email"))
+	recievingemail = emaildata.get("email")
+	idemail = recievingemail.get("thread_id")
+
+	threademail = recievingemail.get("threads")
+	content = threademail.get(idemail)
+	contentplain = content.get("content_plain")
+	print(contentplain)
+
+	
+
+	#content = threademail.get(idemail)
+	#print(content)
+	#contentplain = content.get("content_plain")
+
+	#content = threademail[0]
+	#print(content.get("content_plain"))
+	#print(contentplain)
+	#print(threademail.get("content_plain"))
+	#print(request.args)
+	#print(emaildata)
 
 	simple = 0
 	total = 0
@@ -38,7 +64,7 @@ def index():
 	data = {
 		"too long" : toolong, "complex" : complexity
 	}
-
+	#return request.args
 	return jsonify(data)
 
 def stringReturn(s):
