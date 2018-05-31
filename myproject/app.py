@@ -1,15 +1,25 @@
 from flask import Flask, render_template, request, jsonify
 import spacy
+import json
+
+from flask_cors import CORS
 app = Flask(__name__)
-@app.route('/', methods = ['GET', 'POST'])
+CORS(app)
 
-def index():
+@app.route('/postmethod', methods = ['POST'])
+def get_post_email_data():
+    jsdata = request.form['data']
+    #content=json.loads(jsdata)[0]
+    print(jsdata)
+    return jsdata
 
+@app.route('/', methods = ['GET'])
+def nlp():
 	simple = 0
 	total = 0
 	nlp = spacy.load('en')
-	text = nlp("There is a library you use to access the GPS hardware. If you're working with a lot of text, you'll eventually want to know more about it.")	
-
+	text = nlp(u"There is a library you use to access the GPS hardware. If you're working with a lot of text, you'll eventually want to know more about it.")	
+	print('Request from the browser')
 	for token in text:
 		if (token.is_stop):
 			simple += 1
@@ -38,7 +48,7 @@ def index():
 	data = {
 		"too long" : toolong, "complex" : complexity
 	}
-
+	#return request.args
 	return jsonify(data)
 
 def stringReturn(s):
