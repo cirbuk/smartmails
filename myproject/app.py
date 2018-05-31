@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import spacy
 import json
-
+import nltk
 
 
 from flask_cors import CORS
@@ -13,8 +13,40 @@ CORS(app)
 def get_post_email_data():
     jsdata = request.form['data']
     #content=json.loads(jsdata)[0]
-    print(jsdata)
+    noisefreedata=removenoise(jsdata)
+    tokens=nltk.tokenize.TreebankWordTokenizer()
+    tokenlist=tokens.tokenize(noisefreedata)
+    res=lemmatizeText(tokenlist)
+    print(res)
+       #nltk.download('wordnet')
+    
+    #print(lemmatizestr)
     return jsdata
+
+def removenoise(input):
+	l=input.split()
+	res=[]
+	for string in l:
+		res+=string.split('<')
+	res1=[]
+	for string in res:
+		res1+=string.split('>')
+	res2=[]
+	for string in res1:
+		res2+=string.split('&')
+	noise=['div','/div','br','nbsp;']
+	result=[x for x in res2 if x not in noise and x]
+	finalstr=''
+	for string in result:
+		finalstr+=string+' '
+	return(finalstr)
+def lemmatizeText(tokenlist):
+	stemmer=nltk.stem.WordNetLemmatizer()
+	res=''
+	for token in tokenlist:
+		res+=stemmer.lemmatize(token)+' '
+	return res
+
 
 
 @app.route('/', methods = ['POST'])
