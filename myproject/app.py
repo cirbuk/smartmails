@@ -1,15 +1,14 @@
 from flask import Flask, render_template, request, jsonify
 import spacy
-<<<<<<< HEAD
 import json
-=======
->>>>>>> 6ab27d1844af7744fdbc7f01e3b0781db7706786
+
+
 
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-<<<<<<< HEAD
+
 @app.route('/postmethod', methods = ['POST'])
 def get_post_email_data():
     jsdata = request.form['data']
@@ -17,7 +16,7 @@ def get_post_email_data():
     print(jsdata)
     return jsdata
 
-=======
+
 @app.route('/', methods = ['POST'])
 def index():
 	#print("hello")
@@ -48,7 +47,7 @@ def index():
 	#print(request.args)
 	#print(emaildata)
 
->>>>>>> 6ab27d1844af7744fdbc7f01e3b0781db7706786
+
 @app.route('/', methods = ['GET'])
 def nlp():
 	simple = 0
