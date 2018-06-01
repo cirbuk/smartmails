@@ -9,20 +9,6 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/postmethod', methods = ['POST'])
-def get_post_email_data():
-    jsdata = request.form['data']
-    #content=json.loads(jsdata)[0]
-    useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
-    noisefreedata = removenoise(jsdata)
-    tokens = nltk.tokenize.TreebankWordTokenizer()
-    tokenlist = tokens.tokenize(noisefreedata)
-    resList = lemmatizeText(tokenlist)
-    classifier = train_classifier()
-    print(resList)
-    print(classifier.classify(build_bag_of_words(resList)))
-    return jsdata
-
 def build_bag_of_words(words):
     useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
     return {word : 1 for word in words if not word in useless_words}
@@ -35,6 +21,21 @@ def train_classifier():
     split = 1000
     sentiment_classifier = NaiveBayesClassifier.train(positive_features[:split] + negative_features[:split])
     return sentiment_classifier
+
+classifier = train_classifier()
+
+@app.route('/postmethod', methods = ['POST'])
+def get_post_email_data():
+    jsdata = request.form['data']
+    #content=json.loads(jsdata)[0]
+    useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
+    noisefreedata = removenoise(jsdata)
+    tokens = nltk.tokenize.TreebankWordTokenizer()
+    tokenlist = tokens.tokenize(noisefreedata)
+    resList = lemmatizeText(tokenlist)
+    print(resList)
+    print(classifier.classify(build_bag_of_words(resList)))
+    return jsdata
 
 def removenoise(input):
     l=input.split()
