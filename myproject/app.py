@@ -2,7 +2,8 @@ from flask import Flask, render_template, request, jsonify
 import nltk
 from nltk.classify import NaiveBayesClassifier
 import string
-from nltk.corpus import movie_reviews
+nltk.download("subjectivity")
+from nltk.corpus import movie_reviews, subjectivity
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
@@ -22,6 +23,7 @@ def train_classifier():
 
 classifier = train_classifier()
 
+
 @app.route('/postmethod', methods = ['POST'])
 def get_post_email_data():
     jsdata = request.form['data']
@@ -31,10 +33,12 @@ def get_post_email_data():
     tokens = nltk.tokenize.TreebankWordTokenizer()
     tokenlist = tokens.tokenize(noisefreedata)
     resList = lemmatizeText(tokenlist)
-    print(resList)
+    #print(resList)
+    word_count_length = word_count(resList).__str__()
     sentiment = classifier.classify(build_bag_of_words(resList))
-    print(sentiment)
-    return jsdata + " is " + sentiment
+    #print(sentiment)
+    #eventually will return an object representing the results of analysis of different features/classes
+    return jsdata + " is " + sentiment + " word count is " + word_count_length
 
 def removenoise(input):
     l=input.split()
@@ -60,15 +64,12 @@ def lemmatizeText(tokenlist):
         token = stemmer.lemmatize(token)
     return tokenlist
 
-@app.route('/', methods = ['POST'])
-def index():
-    emaildata = request.get_json()
-    recievingemail = emaildata.get("email")
-    idemail = recievingemail.get("first_email")
-    threademail = recievingemail.get("threads")
-    content = threademail.get(idemail)
-    contentplain = content.get("content_plain")
-    print(contentplain)
+def word_count(text):
+    length = 0
+    for token in text:
+        if token not in string.punctuation:
+            length += 1
+    return length    
 
 @app.route('/', methods = ['GET'])
 def nlp():
