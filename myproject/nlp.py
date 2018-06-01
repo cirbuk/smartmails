@@ -2,6 +2,8 @@
 #complex words with simple synonym
 #
 import spacy
+from spacy import en
+
 
 def replaceadp(doc):
 	words = []

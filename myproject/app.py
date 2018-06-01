@@ -1,9 +1,75 @@
 from flask import Flask, render_template, request, jsonify
 import spacy
+import json
+import nltk
+from nltk.classify import NaiveBayesClassifier
+import string
+from nltk.corpus import movie_reviews
+
 
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
+
+
+@app.route('/postmethod', methods = ['POST'])
+def get_post_email_data():
+    jsdata = request.form['data']
+    #content=json.loads(jsdata)[0]
+    useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
+
+    noisefreedata=removenoise(jsdata)
+    tokens=nltk.tokenize.TreebankWordTokenizer()
+    tokenlist=tokens.tokenize(noisefreedata)
+    resList=lemmatizeText(tokenlist)
+    classifier = train_classifier()
+
+    print(resList)
+
+    print(classifier.classify(build_bag_of_words(resList)))
+
+
+
+    
+    	
+    return jsdata
+
+def build_bag_of_words(words):
+	useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
+	return {word : 1 for word in words if not word in useless_words}
+
+def train_classifier():
+	positive_fileids = movie_reviews.fileids("pos")
+	negative_fileids = movie_reviews.fileids("neg")
+	negative_features = [(build_bag_of_words(movie_reviews.words(fileids = [f])), "neg") for f in negative_fileids]
+	positive_features = [(build_bag_of_words(movie_reviews.words(fileids = [f])), "pos") for f in positive_fileids]
+	split = 1000
+	sentiment_classifier = NaiveBayesClassifier.train(positive_features[:split] + negative_features[:split])
+	return sentiment_classifier
+
+def removenoise(input):
+	l=input.split()
+	res=[]
+	for string in l:
+		res+=string.split('<')
+	res1=[]
+	for string in res:
+		res1+=string.split('>')
+	res2=[]
+	for string in res1:
+		res2+=string.split('&')
+	noise=['div','/div','br','nbsp;']
+	result=[x for x in res2 if x not in noise and x]
+	finalstr=''
+	for string in result:
+		finalstr+=string+' '
+	return(finalstr)
+
+def lemmatizeText(tokenlist):
+	stemmer=nltk.stem.WordNetLemmatizer()
+	for token in tokenlist:
+		token = stemmer.lemmatize(token)
+	return tokenlist
 
 @app.route('/', methods = ['POST'])
 def index():
@@ -35,13 +101,14 @@ def index():
 	#print(request.args)
 	#print(emaildata)
 
+
 @app.route('/', methods = ['GET'])
 def nlp():
 	simple = 0
 	total = 0
 	nlp = spacy.load('en')
-	text = nlp("There is a library you use to access the GPS hardware. If you're working with a lot of text, you'll eventually want to know more about it.")	
-
+	text = nlp(u"There is a library you use to access the GPS hardware. If you're working with a lot of text, you'll eventually want to know more about it.")	
+	print('Request from the browser')
 	for token in text:
 		if (token.is_stop):
 			simple += 1
