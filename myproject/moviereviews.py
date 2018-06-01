@@ -9,7 +9,6 @@ from nltk.classify import NaiveBayesClassifier
 positive_fileids = movie_reviews.fileids("pos")
 negative_fileids = movie_reviews.fileids("neg")
 #print(movie_reviews.words(fileids = positive_fileids[0]))
-
 useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
 
 def build_bag_of_words(words):
@@ -25,9 +24,4 @@ sentiment_classifier = NaiveBayesClassifier.train(positive_features[:split] + ne
 
 print(nltk.classify.util.accuracy(sentiment_classifier, positive_features[:split] + negative_features[:split]))
 print(nltk.classify.util.accuracy(sentiment_classifier, positive_features[split:] + negative_features[split:]))
-
-
-
 print(sentiment_classifier.show_most_informative_features())
-
-

@@ -5,33 +5,22 @@ import nltk
 from nltk.classify import NaiveBayesClassifier
 import string
 from nltk.corpus import movie_reviews
-
-
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
-
 
 @app.route('/postmethod', methods = ['POST'])
 def get_post_email_data():
     jsdata = request.form['data']
     #content=json.loads(jsdata)[0]
     useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
-
-    noisefreedata=removenoise(jsdata)
-    tokens=nltk.tokenize.TreebankWordTokenizer()
-    tokenlist=tokens.tokenize(noisefreedata)
-    resList=lemmatizeText(tokenlist)
+    noisefreedata = removenoise(jsdata)
+    tokens = nltk.tokenize.TreebankWordTokenizer()
+    tokenlist = tokens.tokenize(noisefreedata)
+    resList = lemmatizeText(tokenlist)
     classifier = train_classifier()
-
-    print(resList)
-
+    #print(resList)
     print(classifier.classify(build_bag_of_words(resList)))
-
-
-
-    
-        
     return jsdata
 
 def build_bag_of_words(words):
@@ -73,34 +62,13 @@ def lemmatizeText(tokenlist):
 
 @app.route('/', methods = ['POST'])
 def index():
-    #print("hello")
     emaildata = request.get_json()
-    #print(emaildata)
-    #print(emaildata.get("email"))
     recievingemail = emaildata.get("email")
     idemail = recievingemail.get("first_email")
-
     threademail = recievingemail.get("threads")
-    #print(threademail)
     content = threademail.get(idemail)
-    #print(idemail)
-    #print(content)
     contentplain = content.get("content_plain")
     print(contentplain)
-
-    
-
-    #content = threademail.get(idemail)
-    #print(content)
-    #contentplain = content.get("content_plain")
-
-    #content = threademail[0]
-    #print(content.get("content_plain"))
-    #print(contentplain)
-    #print(threademail.get("content_plain"))
-    #print(request.args)
-    #print(emaildata)
-
 
 @app.route('/', methods = ['GET'])
 def nlp():
@@ -113,7 +81,6 @@ def nlp():
         if (token.is_stop):
             simple += 1
         total += 1
-    
     length = 0
     punct = [".", ",", "?", "!"]
     numwrong = 0
@@ -127,13 +94,9 @@ def nlp():
     toolong = numwrong.__str__()
     if numwrong.__str__() != "0":
         error1 = " " + numwrong.__str__() + " Sentences are too long, shorten them."
-
-
     if (simple * 2 < total):
         complexity = True
         error2 = " Language is too complex, simplify."
-
-
     data = {
         "too long" : toolong, "complex" : complexity
     }
@@ -146,7 +109,6 @@ def stringReturn(s):
 def replaceadp(doc):
     words = []
     for token in doc:
-
         words.append(token)
         #print("check if works")
         #print(token.pos_)
@@ -170,7 +132,6 @@ def analyzer(d):
     punct = [".", ",", "?", "!"]
     numwrong = 0
     for token in d:
-
         if token.__str__() not in punct:
             length += 1
         if token.__str__() == ".": 
@@ -181,8 +142,6 @@ def analyzer(d):
         print(numwrong.__str__() + " sentences are too long, shorten them")
                 #if not replaceadp(d):
                     #print("text is fine")
-
-
 
 if __name__ == '__main__':
     app.run(debug = True)
