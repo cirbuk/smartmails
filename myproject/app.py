@@ -19,7 +19,7 @@ def get_post_email_data():
     tokenlist = tokens.tokenize(noisefreedata)
     resList = lemmatizeText(tokenlist)
     classifier = train_classifier()
-    #print(resList)
+    print(resList)
     print(classifier.classify(build_bag_of_words(resList)))
     return jsdata
 
