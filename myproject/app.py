@@ -1,6 +1,4 @@
 from flask import Flask, render_template, request, jsonify
-import spacy
-import json
 import nltk
 from nltk.classify import NaiveBayesClassifier
 import string
@@ -34,8 +32,9 @@ def get_post_email_data():
     tokenlist = tokens.tokenize(noisefreedata)
     resList = lemmatizeText(tokenlist)
     print(resList)
-    print(classifier.classify(build_bag_of_words(resList)))
-    return jsdata
+    sentiment = classifier.classify(build_bag_of_words(resList))
+    print(sentiment)
+    return jsdata + " is " + sentiment
 
 def removenoise(input):
     l=input.split()
