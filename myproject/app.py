@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, jsonify
 import nltk
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
 from nltk.classify import NaiveBayesClassifier
 import string
-nltk.download("subjectivity")
 from nltk.corpus import movie_reviews, subjectivity
 from flask_cors import CORS
 app = Flask(__name__)
@@ -21,24 +23,77 @@ def train_classifier():
     sentiment_classifier = NaiveBayesClassifier.train(positive_features[:split] + negative_features[:split])
     return sentiment_classifier
 
-classifier = train_classifier()
+#extracting features using tf-idf values for 1-2grams
+tf=TfidfVectorizer(min_df=2,max_df=0.5,ngram_range=(1,2))
 
+def vectorizer(data):
+    tfidf_matrix=tf.fit_transform(data)
+    matrix=tfidf_matrix.toarray()
+    return matrix
+
+
+
+def trainLogisticClassifier():
+    data = []
+    data_labels = []
+    with open("./twitter_data/pos_tweets.txt") as f:
+        for i in f: 
+            data.append(i) 
+            data_labels.append('pos')
+ 
+    with open("./twitter_data/neg_tweets.txt") as f:
+        for i in f: 
+            data.append(i)
+            data_labels.append('neg')
+    matrix=vectorizer(data)
+    split=1803
+    X_train=matrix[:split]
+    y_train=data_labels[:split]
+    X_test=matrix[split:]
+    y_test=data_labels[split:]
+    log_model=LogisticRegression()
+    log_model = log_model.fit(X=X_train, y=y_train)
+    y_pred = log_model.predict(X_test)
+    print(accuracy_score(y_test, y_pred))
+    return log_model
+
+
+
+#classifier = train_classifier()
+log_model=trainLogisticClassifier()
 
 @app.route('/postmethod', methods = ['POST'])
 def get_post_email_data():
     jsdata = request.form['data']
     #content=json.loads(jsdata)[0]
-    useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
+    #useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
     noisefreedata = removenoise(jsdata)
     tokens = nltk.tokenize.TreebankWordTokenizer()
     tokenlist = tokens.tokenize(noisefreedata)
     resList = lemmatizeText(tokenlist)
-    #print(resList)
+    tfidf_query=gettfidfvector(resList)
     word_count_length = word_count(resList).__str__()
-    sentiment = classifier.classify(build_bag_of_words(resList))
+    sentiment=log_model.predict(tfidf_query)
+    print(sentiment)
+    #sentiment = classifier.classify(build_bag_of_words(resList))
     #print(sentiment)
     #eventually will return an object representing the results of analysis of different features/classes
-    return jsdata + " is " + sentiment + " word count is " + word_count_length
+    return jsdata + " word count is " + word_count_length
+
+def gettfidfvector(list):
+    str1=''
+    for word in list:
+        if word not in string.punctuation:
+            str1+=word+' '
+    str1=str1[:len(str1)-1]
+    print(str1)
+    vec=tf.transform([str1])
+    return vec
+
+
+
+
+
 
 def removenoise(input):
     l=input.split()
