@@ -46,15 +46,12 @@ def trainLogisticClassifier():
             data.append(i)
             data_labels.append('neg')
     matrix=vectorizer(data)
-    split=1803
+    split=len(matrix)
     X_train=matrix[:split]
     y_train=data_labels[:split]
-    X_test=matrix[split:]
-    y_test=data_labels[split:]
     log_model=LogisticRegression()
     log_model = log_model.fit(X=X_train, y=y_train)
-    y_pred = log_model.predict(X_test)
-    print(accuracy_score(y_test, y_pred))
+    print("Logistic Classifier trained")
     return log_model
 
 
@@ -73,8 +70,8 @@ def get_post_email_data():
     resList = lemmatizeText(tokenlist)
     tfidf_query=gettfidfvector(resList)
     word_count_length = word_count(resList).__str__()
-    sentiment=log_model.predict(tfidf_query)
-    print(sentiment)
+    prob,positivity=log_model.predict_proba(tfidf_query),log_model.predict(tfidf_query)
+    print(prob,positivity[0])
     #sentiment = classifier.classify(build_bag_of_words(resList))
     #print(sentiment)
     #eventually will return an object representing the results of analysis of different features/classes
