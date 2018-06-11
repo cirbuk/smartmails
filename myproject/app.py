@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-import nltk
+import nltk,json
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
@@ -72,10 +72,15 @@ def get_post_email_data():
     word_count_length = word_count(resList).__str__()
     prob,positivity=log_model.predict_proba(tfidf_query),log_model.predict(tfidf_query)
     print(prob,positivity[0])
+    print(prob.shape)
+    res={}
+    res['neg']=prob[0,0]
+    res['pos']=prob[0,1]
+    res['word_count']=word_count_length
     #sentiment = classifier.classify(build_bag_of_words(resList))
     #print(sentiment)
     #eventually will return an object representing the results of analysis of different features/classes
-    return jsdata + " word count is " + word_count_length
+    return json.dumps(res)
 
 def gettfidfvector(list):
     str1=''

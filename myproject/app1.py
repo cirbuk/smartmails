@@ -23,12 +23,13 @@ def get_post_email_data():
     word_count_length = word_count(resList).__str__()
     sid=SentimentIntensityAnalyzer()
     scores=sid.polarity_scores(processedData)
+    scores['word_count']=word_count_length
     print(processedData)
     print(scores)
     #sentiment = classifier.classify(build_bag_of_words(resList))
     #print(sentiment)
     #eventually will return an object representing the results of analysis of different features/classes
-    return jsdata + " word count is " + word_count_length + " sentiment and complexity scores" + json.dumps(scores)
+    return json.dumps(scores)
 
 def removenoise(input):
     l=input.split()
