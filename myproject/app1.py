@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, jsonify
 import nltk
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics import accuracy_score
+from sklearn.linear_model import SGDClassifier
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 #uses the sentiment lexicon and morphological analysis to analyze sentences
 #Must perform nltk.download('vader_lexicon')
@@ -8,6 +11,42 @@ import string
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
+
+tf=TfidfVectorizer(analyzer='word')
+
+def vectorizer(data):
+    tfidf_matrix=tf.fit_transform(data)
+    matrix=tfidf_matrix.toarray()
+    return matrix
+
+
+def trainSVClassifier():
+    data = []
+    data_labels = []
+    with open("./subobj_data/subj.txt") as f:
+        for i in f: 
+            data.append(i) 
+            data_labels.append('subj')
+ 
+    with open("./subobj_data/obj.txt") as f:
+        for i in f: 
+            data.append(i)
+            data_labels.append('obj')
+    matrix=vectorizer(data)
+    X_train=matrix
+    y_train=data_labels
+    #X_test=matrix[8000:]
+    #y_test=data_labels[8000:]
+    clf_svm=SGDClassifier(loss='modified_huber', penalty='l2',alpha=1e-3,max_iter=50,tol=None,random_state=42)
+    clf_svm = clf_svm.fit(X=X_train, y=y_train)
+    #predict=clf_svm.predict(X_test)
+    #print(len(predict))
+    #print(accuracy_score(y_test,predict))
+    print("Trained SV classifier")
+    return clf_svm
+
+obj_clf=trainSVClassifier()
+
 
 
 @app.route('/postmethod', methods = ['POST'])
@@ -23,7 +62,12 @@ def get_post_email_data():
     word_count_length = word_count(resList).__str__()
     sid=SentimentIntensityAnalyzer()
     scores=sid.polarity_scores(processedData)
+    obj_res,obj_score=obj_clf.predict(tf.transform([processedData])),obj_clf.predict_proba(tf.transform([processedData]))
+    print(obj_res[0])
+    print(obj_score)
     scores['word_count']=word_count_length
+    scores['subjectivity']=round(obj_score[0,1],4)
+    scores['objectivity']=round(obj_score[0,0],4)
     print(processedData)
     print(scores)
     #sentiment = classifier.classify(build_bag_of_words(resList))
