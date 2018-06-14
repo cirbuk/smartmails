@@ -58,6 +58,7 @@ def get_post_email_data():
 	tokens = nltk.tokenize.TreebankWordTokenizer()
 	tokenlist = tokens.tokenize(noisefreedata)
 	resList = lemmatizeText(tokenlist)
+	print(resList)
 	processedData=getPunctFreeString(resList)
 	word_count_length = word_count(resList).__str__()
 	sid=SentimentIntensityAnalyzer()
@@ -65,11 +66,10 @@ def get_post_email_data():
 	obj_res,obj_score=obj_clf.predict(tf.transform([processedData])),obj_clf.predict_proba(tf.transform([processedData]))
 	print(obj_res[0])
 	print(obj_score)
-	scores['complex_words']=getComplexWords(processedData)
+	scores['complex_words']=getComplexWords(resList)
 	scores['word_count']=word_count_length
 	scores['subjectivity']=round(obj_score[0,1],4)
 	scores['objectivity']=round(obj_score[0,0],4)
-	print(processedData)
 	print(scores)
 	#sentiment = classifier.classify(build_bag_of_words(resList))
 	#print(sentiment)
@@ -116,8 +116,9 @@ def getPunctFreeString(list):
 	return str1
 
 def getComplexWords(text):
-	complex=0
+	ncomplex=0
 	for word in text:
+		word.__str__()
 		syllables = 0
 		for i in range(len(word)):
 			if i == 0 and word[i] in "aeiouy" :
@@ -130,8 +131,8 @@ def getComplexWords(text):
 		if len(word) > 0 and syllables == 0 :
 			syllables = 1
 		if syllables>=3:
-			complex=complex+1
-	return complex
+			ncomplex=ncomplex+1
+	return ncomplex
 
 
 if __name__ == '__main__':
