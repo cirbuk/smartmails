@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import nltk
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.externals import joblib
 from sklearn.metrics import accuracy_score
 from sklearn.linear_model import SGDClassifier
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -12,10 +13,12 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-tf=TfidfVectorizer(analyzer='word')
+#tf=TfidfVectorizer(analyzer='word')
 
 def vectorizer(data):
 	tfidf_matrix=tf.fit_transform(data)
+	joblib.dump(tf,'model/vectorizer.joblib.pkl',compress=9)
+	print('vectorizer saved')
 	matrix=tfidf_matrix.toarray()
 	return matrix
 
@@ -33,6 +36,8 @@ def trainSVClassifier():
 			data.append(i)
 			data_labels.append('obj')
 	matrix=vectorizer(data)
+
+	'''matrix=vectorizer(data)
 	X_train=matrix
 	y_train=data_labels
 	#X_test=matrix[8000:]
@@ -43,10 +48,15 @@ def trainSVClassifier():
 	#print(len(predict))
 	#print(accuracy_score(y_test,predict))
 	print("Trained SV classifier")
-	return clf_svm
+	joblib.dump(clf_svm,'model/subj_clf.joblib.pkl',compress=9)'''
 
-obj_clf=trainSVClassifier()
+	
 
+
+obj_clf=joblib.load('model/subj_clf.joblib.pkl')
+print('Loaded SV classifier')
+tf=joblib.load('model/vectorizer.joblib.pkl')
+print('vectorizer loaded')
 
 
 @app.route('/postmethod', methods = ['POST'])

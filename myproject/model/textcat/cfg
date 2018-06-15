@@ -1,0 +1,10 @@
+{
+  "labels":[
+    "Very Polite",
+    "Polite",
+    "Neutral",
+    "Rude",
+    "Very Rude"
+  ],
+  "pretrained_vectors":null
+}
