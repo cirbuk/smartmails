@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import nltk
+import pickle,spacy
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.externals import joblib
 from sklearn.metrics import accuracy_score
@@ -13,10 +14,10 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-
-obj_clf=joblib.load('model/subj_clf.joblib.pkl')
+nlp=spacy.load('newmodel')
+obj_clf=pickle.load(open('model/subj_clf.joblib.pkl',"rb"))
 print('Loaded SV classifier')
-tf=joblib.load('model/vectorizer.joblib.pkl')
+tf=joblib.load(open('model/vectorizer.joblib.pkl',"rb"))
 print('vectorizer loaded')
 
 
@@ -37,10 +38,12 @@ def get_post_email_data():
 	obj_res,obj_score=obj_clf.predict(tf.transform([processedData])),obj_clf.predict_proba(tf.transform([processedData]))
 	print(obj_res[0])
 	print(obj_score)
+	doc=nlp(processedData)
 	scores['complex_words']=getComplexWords(resList)
 	scores['word_count']=word_count_length
 	scores['subjectivity']=round(obj_score[0,1],4)
 	scores['objectivity']=round(obj_score[0,0],4)
+	scores['politeness']=doc.cats
 	print(scores)
 	#sentiment = classifier.classify(build_bag_of_words(resList))
 	#print(sentiment)
