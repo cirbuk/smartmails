@@ -13,45 +13,6 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-#tf=TfidfVectorizer(analyzer='word')
-
-def vectorizer(data):
-	tfidf_matrix=tf.fit_transform(data)
-	joblib.dump(tf,'model/vectorizer.joblib.pkl',compress=9)
-	print('vectorizer saved')
-	matrix=tfidf_matrix.toarray()
-	return matrix
-
-
-def trainSVClassifier():
-	data = []
-	data_labels = []
-	with open("./subobj_data/subj.txt") as f:
-		for i in f: 
-			data.append(i) 
-			data_labels.append('subj')
- 
-	with open("./subobj_data/obj.txt") as f:
-		for i in f: 
-			data.append(i)
-			data_labels.append('obj')
-	matrix=vectorizer(data)
-
-	'''matrix=vectorizer(data)
-	X_train=matrix
-	y_train=data_labels
-	#X_test=matrix[8000:]
-	#y_test=data_labels[8000:]
-	clf_svm=SGDClassifier(loss='modified_huber', penalty='l2',alpha=1e-3,max_iter=50,tol=None,random_state=42)
-	clf_svm = clf_svm.fit(X=X_train, y=y_train)
-	#predict=clf_svm.predict(X_test)
-	#print(len(predict))
-	#print(accuracy_score(y_test,predict))
-	print("Trained SV classifier")
-	joblib.dump(clf_svm,'model/subj_clf.joblib.pkl',compress=9)'''
-
-	
-
 
 obj_clf=joblib.load('model/subj_clf.joblib.pkl')
 print('Loaded SV classifier')
