@@ -15,9 +15,10 @@ app = Flask(__name__)
 CORS(app)
 
 nlp=spacy.load('newmodel')
+nlp1=spacy.load("tone_model")
 obj_clf=pickle.load(open('model/subj_clf.joblib.pkl',"rb"))
 print('Loaded SV classifier')
-tf=joblib.load(open('model/vectorizer.joblib.pkl',"rb"))
+tf=pickle.load(open('model/vectorizer.joblib.pkl',"rb"))
 print('vectorizer loaded')
 
 
@@ -38,12 +39,14 @@ def get_post_email_data():
 	obj_res,obj_score=obj_clf.predict(tf.transform([processedData])),obj_clf.predict_proba(tf.transform([processedData]))
 	print(obj_res[0])
 	print(obj_score)
-	doc=nlp(processedData)
+	doc=nlp(processedData.decode('utf-8'))
+	doc1=nlp1(processedData.decode('utf-8'))
 	scores['complex_words']=getComplexWords(resList)
 	scores['word_count']=word_count_length
 	scores['subjectivity']=round(obj_score[0,1],4)
 	scores['objectivity']=round(obj_score[0,0],4)
 	scores['politeness']=doc.cats
+	scores['tone']=doc1.cats
 	print(scores)
 	#sentiment = classifier.classify(build_bag_of_words(resList))
 	#print(sentiment)
