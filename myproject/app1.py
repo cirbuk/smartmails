@@ -31,6 +31,8 @@ def get_post_email_data():
 	tokens = nltk.tokenize.TreebankWordTokenizer()
 	tokenlist = tokens.tokenize(noisefreedata)
 	resList = lemmatizeText(tokenlist)
+	if resList==[]:
+		return json.dumps({})
 	print(resList)
 	processedData=getPunctFreeString(resList)
 	word_count_length = word_count(resList).__str__()
