@@ -15,10 +15,12 @@ app = Flask(__name__)
 CORS(app)
 
 nlp=spacy.load('newmodel')
-nlp1=spacy.load("tone_model")
+#nlp1=spacy.load("tone_model")
 obj_clf=pickle.load(open('model/subj_clf.joblib.pkl',"rb"))
+tone_clf=pickle.load(open('tone_model_1/subj_clf.joblib.pkl',"rb"))
 print('Loaded SV classifier')
 tf=pickle.load(open('model/vectorizer.joblib.pkl',"rb"))
+tf_tone=pickle.load(open('tone_model_1/vectorizer.joblib.pkl',"rb"))
 print('vectorizer loaded')
 
 
@@ -39,16 +41,17 @@ def get_post_email_data():
 	sid=SentimentIntensityAnalyzer()
 	scores=sid.polarity_scores(processedData)
 	obj_res,obj_score=obj_clf.predict(tf.transform([processedData])),obj_clf.predict_proba(tf.transform([processedData]))
-	print(obj_res[0])
-	print(obj_score)
+	tone_res,tone_score=tone_clf.predict(tf_tone.transform([processedData])),tone_clf.predict_proba(tf_tone.transform([processedData]))
+	print(tone_res[0])
+	#print(tone_score)
 	doc=nlp(processedData.decode('utf-8'))
-	doc1=nlp1(processedData.decode('utf-8'))
+	#doc1=nlp1(processedData.decode('utf-8'))
 	scores['complex_words']=getComplexWords(resList)
 	scores['word_count']=word_count_length
 	scores['subjectivity']=round(obj_score[0,1],4)
 	scores['objectivity']=round(obj_score[0,0],4)
 	scores['politeness']=doc.cats
-	scores['tone']=doc1.cats
+	scores['tone']={'anger':round(tone_score[0,0],4),'fear':round(tone_score[0,1],4),'joy':round(tone_score[0,2],4),'love':round(tone_score[0,3],4),'sadness':round(tone_score[0,4],4),'surprise':round(tone_score[0,5],4)}
 	print(scores)
 	#sentiment = classifier.classify(build_bag_of_words(resList))
 	#print(sentiment)
