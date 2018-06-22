@@ -16,11 +16,13 @@ CORS(app)
 
 nlp=spacy.load('newmodel')
 #nlp1=spacy.load("tone_model")
-obj_clf=pickle.load(open('model/subj_clf.joblib.pkl',"rb"))
-tone_clf=pickle.load(open('tone_model_1/subj_clf.joblib.pkl',"rb"))
+obj_clf=pickle.load(open('model/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
+tone_clf=pickle.load(open('tone_model_1/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
+polite_clf=pickle.load(open('politenessmodel/classifier.joblib.pkl',"rb"), encoding = "latin1")
 print('Loaded SV classifier')
-tf=pickle.load(open('model/vectorizer.joblib.pkl',"rb"))
-tf_tone=pickle.load(open('tone_model_1/vectorizer.joblib.pkl',"rb"))
+tf=pickle.load(open('model/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
+tf_tone=pickle.load(open('tone_model_1/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
+tf_polite=pickle.load(open('politenessmodel/vectorizer.joblib.pkl', "rb"), encoding = "latin1")
 print('vectorizer loaded')
 
 
@@ -42,15 +44,18 @@ def get_post_email_data():
 	scores=sid.polarity_scores(processedData)
 	obj_res,obj_score=obj_clf.predict(tf.transform([processedData])),obj_clf.predict_proba(tf.transform([processedData]))
 	tone_res,tone_score=tone_clf.predict(tf_tone.transform([processedData])),tone_clf.predict_proba(tf_tone.transform([processedData]))
+	polite_res, polite_score=polite_clf.predict(tf_polite.transform([processedData])), polite_clf.predict_proba(tf_polite.transform([processedData]))
 	print(tone_res[0])
+	print(polite_res[0])
+	print(polite_score)
 	#print(tone_score)
-	doc=nlp(processedData.decode('utf-8'))
+	doc=nlp(processedData)
 	#doc1=nlp1(processedData.decode('utf-8'))
 	scores['complex_words']=getComplexWords(resList)
 	scores['word_count']=word_count_length
 	scores['subjectivity']=round(obj_score[0,1],4)
 	scores['objectivity']=round(obj_score[0,0],4)
-	scores['politeness']=doc.cats
+	#scores['politeness']={'polite':round(polite_score[0, 0], 4), "rude": }
 	scores['tone']={'anger':round(tone_score[0,0],4),'fear':round(tone_score[0,1],4),'joy':round(tone_score[0,2],4),'love':round(tone_score[0,3],4),'sadness':round(tone_score[0,4],4),'surprise':round(tone_score[0,5],4)}
 	print(scores)
 	#sentiment = classifier.classify(build_bag_of_words(resList))
