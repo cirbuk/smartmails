@@ -8,7 +8,7 @@ tf=TfidfVectorizer(analyzer='word')
 
 def vectorizer(data):
 	tfidf_matrix=tf.fit_transform(data)
-	pickle.dump(tf,open('tone_model_1/vectorizer.joblib.pkl',"wb"))
+	pickle.dump(tf,open('trainingmodels/tone/vectorizer.joblib.pkl',"wb"))
 	print('vectorizer saved')
 	matrix=tfidf_matrix.toarray()
 	return matrix
