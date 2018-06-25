@@ -16,14 +16,14 @@ CORS(app)
 
 nlp=spacy.load('newmodel')
 #nlp1=spacy.load("tone_model")
-obj_clf=pickle.load(open('model/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
-tone_clf=pickle.load(open('tone_model_1/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
-polite_clf=pickle.load(open('politenessmodel/classifier.joblib.pkl',"rb"), encoding = "latin1")
+obj_clf=pickle.load(open('training_models/subjectivity/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
+tone_clf=pickle.load(open('training_models/tone/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
+polite_clf=pickle.load(open('training_models/politeness/classifier.joblib.pkl',"rb"), encoding = "latin1")
 print('Loaded SV classifier')
 
-tf=pickle.load(open('model/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
-tf_tone=pickle.load(open('tone_model_1/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
-tf_polite=pickle.load(open('politenessmodel/vectorizer.joblib.pkl', "rb"), encoding = "latin1")
+tf=pickle.load(open('training_models/subjectivity/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
+tf_tone=pickle.load(open('training_models/tone/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
+tf_polite=pickle.load(open('training_models/politeness/vectorizer.joblib.pkl', "rb"), encoding = "latin1")
 
 print('vectorizer loaded')
 wordslist = []
@@ -93,8 +93,8 @@ def get_post_email_data():
 	#doc1=nlp1(processedData.decode('utf-8'))
 	scores['complex_words']=getComplexWords(resList)
 	scores['word_count']=word_count_length
-	scores['subjectivity']=round(obj_score[0,1],4)
-	scores['objectivity']=round(obj_score[0,0],4)
+	scores['subjectivity']=round(obj_score_modified[0,1],4)
+	scores['objectivity']=round(obj_score_modified[0,0],4)
 	scores['politeness']={'polite':round(polite_score[0, 0], 4), "rude": round(polite_score[0, 1], 4)}
 	scores['tone']={'anger':round(tone_score[0,0],4),'fear':round(tone_score[0,1],4),'joy':round(tone_score[0,2],4),'love':round(tone_score[0,3],4),'sadness':round(tone_score[0,4],4),'surprise':round(tone_score[0,5],4)}
 	print(scores)
@@ -166,8 +166,9 @@ def getComplexWords(text):
 def modifysubjscore(text, score, wordcount):
 	subjlen = 0
 	objlen = 0
-	print(dic)
-	print(text)
+	#print(dic)
+	#print(text)
+	words = []
 	words = text.split()
 	for word in words:
 		print(dic.get(word))
