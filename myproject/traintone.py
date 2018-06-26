@@ -29,7 +29,7 @@ def trainSVClassifier():
 			data.append(i)
 			data_labels.append('obj')
 '''
-	niters=30000
+	niters=25000
 	with open("./tone_data/anger/anger") as f:
 		j=0
 		for i in f:
