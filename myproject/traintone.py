@@ -8,7 +8,7 @@ tf=TfidfVectorizer(analyzer='word')
 
 def vectorizer(data):
 	tfidf_matrix=tf.fit_transform(data)
-	pickle.dump(tf,open('training_models/tone/vectorizer.joblib.pkl',"wb"))
+	pickle.dump(tf,open('training_models/tone/vectorizer.joblib.pkl',"wb"),protocol=2)
 	print('vectorizer saved')
 	matrix=tfidf_matrix.toarray()
 	return matrix
@@ -29,7 +29,7 @@ def trainSVClassifier():
 			data.append(i)
 			data_labels.append('obj')
 '''
-	niters=25000
+	niters=40000
 	with open("./tone_data/anger/anger") as f:
 		j=0
 		for i in f:
@@ -98,7 +98,7 @@ def trainSVClassifier():
 	print(len(predict))
 	print(accuracy_score(y_test,predict))
 	print("Trained SV classifier")
-	pickle.dump(clf_svm,open('training_models/tone/tone_clf.joblib.pkl',"wb"))
+	pickle.dump(clf_svm,open('training_models/tone/tone_clf.joblib.pkl',"wb"),protocol=2)
 trainSVClassifier()
 
 '''anger-1 fear-2 joy-3 surprise-6 5-sadness 4-love
