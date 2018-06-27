@@ -15,14 +15,14 @@ app = Flask(__name__)
 CORS(app)
 
 #nlp1=spacy.load("tone_model")
-obj_clf=pickle.load(open('training_models/subjectivity/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
-tone_clf=pickle.load(open('training_models/tone/tone_clf.joblib.pkl',"rb"), encoding = "latin1")
-polite_clf=pickle.load(open('training_models/politeness/classifier.joblib.pkl',"rb"), encoding = "latin1")
+obj_clf=pickle.load(open('training_models/subjectivity/subj_clf.joblib.pkl',"rb"))
+tone_clf=pickle.load(open('training_models/tone/tone_clf.joblib.pkl',"rb"))
+polite_clf=pickle.load(open('training_models/politeness/classifier.joblib.pkl',"rb"))
 print('Loaded SV classifier')
 
-tf=pickle.load(open('training_models/subjectivity/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
-tf_tone=pickle.load(open('training_models/tone/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
-tf_polite=pickle.load(open('training_models/politeness/vectorizer.joblib.pkl', "rb"), encoding = "latin1")
+tf=pickle.load(open('training_models/subjectivity/vectorizer.joblib.pkl',"rb"))
+tf_tone=pickle.load(open('training_models/tone/vectorizer.joblib.pkl',"rb"))
+tf_polite=pickle.load(open('training_models/politeness/vectorizer.joblib.pkl', "rb"))
 
 print('vectorizer loaded')
 wordslist = []
@@ -71,7 +71,7 @@ def get_post_email_data():
 	if resList==[]:
 		return json.dumps({})
 	print(resList)
-	sentence_count_length = sentence_count(resList)
+	#sentence_count_length = sentence_count(resList)
 	question_count_length = question_count(resList)
 	processedData=getPunctFreeString(resList)
 
@@ -187,7 +187,7 @@ def getComplexWords(text):
 	ncomplex=0
 	ntotal = 0
 	for word in text:
-		word.__str__()
+		#word.__str__()
 		syllables = 0
 		for i in range(len(word)):
 			if i == 0 and word[i] in "aeiouy" :
@@ -215,7 +215,6 @@ def modifysubjscore(text, score, wordcount):
 	words = []
 	words = text.split()
 	for word in words:
-		print(dic.get(word))
 		if dic.get(word) == "strongsubj":
 			subjlen += 1
 		if dic.get(word) == "weaksubj":
@@ -223,10 +222,6 @@ def modifysubjscore(text, score, wordcount):
 	subj_ratio = float(subjlen) / wordcount
 	obj_ratio = float(objlen) / wordcount
 	subj_diff = abs(subj_ratio - obj_ratio)
-	#print(subjlen)
-	#print(wordcount)
-	#print(subj_ratio)
-	print(subj_diff)
 	if subj_ratio > obj_ratio:
 		score[0, 1] += subj_diff
 		score[0, 0] -= subj_diff
