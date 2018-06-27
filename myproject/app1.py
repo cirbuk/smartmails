@@ -14,10 +14,9 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-nlp=spacy.load('newmodel')
 #nlp1=spacy.load("tone_model")
 obj_clf=pickle.load(open('training_models/subjectivity/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
-tone_clf=pickle.load(open('training_models/tone/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
+tone_clf=pickle.load(open('training_models/tone/tone_clf.joblib.pkl',"rb"), encoding = "latin1")
 polite_clf=pickle.load(open('training_models/politeness/classifier.joblib.pkl',"rb"), encoding = "latin1")
 print('Loaded SV classifier')
 
@@ -64,17 +63,22 @@ def get_post_email_data():
 	#content=json.loads(jsdata)[0]
 	#useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
 	noisefreedata = removenoise(jsdata)
+	word_count_length = word_count(noisefreedata)
+
 	tokens = nltk.tokenize.TreebankWordTokenizer()
 	tokenlist = tokens.tokenize(noisefreedata)
 	resList = lemmatizeText(tokenlist)
 	if resList==[]:
 		return json.dumps({})
 	print(resList)
+	sentence_count_length = sentence_count(resList)
+	question_count_length = question_count(resList)
 	processedData=getPunctFreeString(resList)
 
+	print(processedData)
 
 
-	word_count_length = word_count(resList)
+
 	sid=SentimentIntensityAnalyzer()
 	scores=sid.polarity_scores(processedData)
 	obj_res,obj_score=obj_clf.predict(tf.transform([processedData])),obj_clf.predict_proba(tf.transform([processedData]))
@@ -91,16 +95,24 @@ def get_post_email_data():
 	#print(polite_score)
 	#print(tone_score)
 	#doc1=nlp1(processedData.decode('utf-8'))
-	scores['complex_words']=getComplexWords(resList)
+	complex_words_length, syllable_count = getComplexWords(resList)
+
+
 	scores['word_count']=word_count_length
+	#scores['sentence_count'] = sentence_count_length
+	scores['question_count']=question_count_length
+	scores['complex_words']=complex_words_length
+	#if sentence_count_length == 0 or word_count_length == 0:
+	#	scores['reading_level']="Not Available"
+	#else:
+	#	scores['reading_level']=0.39 * word_count_length / sentence_count_length + 11.8 * syllable_count / word_count_length - 15.59;
+	scores['politeness']={'polite':round(polite_score[0, 0], 4), "rude": round(polite_score[0, 1], 4)}
 	scores['subjectivity']=round(obj_score_modified[0,1],4)
 	scores['objectivity']=round(obj_score_modified[0,0],4)
-	scores['politeness']={'polite':round(polite_score[0, 0], 4), "rude": round(polite_score[0, 1], 4)}
 	scores['tone']={'anger':round(tone_score[0,0],4),'fear':round(tone_score[0,1],4),'joy':round(tone_score[0,2],4),'love':round(tone_score[0,3],4),'sadness':round(tone_score[0,4],4),'surprise':round(tone_score[0,5],4)}
 	print(scores)
 	#sentiment = classifier.classify(build_bag_of_words(resList))
 	#print(sentiment)
-	#eventually will return an object representing the results of analysis of different features/classes
 	return json.dumps(scores)
 
 def removenoise(input):
@@ -127,12 +139,41 @@ def lemmatizeText(tokenlist):
 		token = stemmer.lemmatize(token)
 	return tokenlist
 
-def word_count(text):
+def word_count(str_text):
+	text = str_text.split()
 	length = 0
 	for token in text:
 		if token not in string.punctuation:
 			length += 1
 	return length   
+
+def question_count(tokens):
+	i = 0
+	count = 0
+	while i < len(tokens):
+		if tokens[i] == "?":
+			i += 1
+			count += 1
+			while i < len(tokens) and tokens[i] == "?":
+				i += 1
+		else:
+			i += 1
+	return count
+'''
+def sentence_count(tokens):
+	i = 0
+	count = 0
+	endofsent = [".", "?", "!"]
+	while i < len(tokens):
+		if tokens[i] in endofsent:
+			i += 1
+			count += 1
+			while i < len(tokens) and tokens[i] in endofsent:
+				i += 1
+		else:
+			i += 1
+	return count
+	'''
 
 def getPunctFreeString(list):
 	str1=''
@@ -144,6 +185,7 @@ def getPunctFreeString(list):
 
 def getComplexWords(text):
 	ncomplex=0
+	ntotal = 0
 	for word in text:
 		word.__str__()
 		syllables = 0
@@ -159,7 +201,9 @@ def getComplexWords(text):
 			syllables = 1
 		if syllables>=3:
 			ncomplex=ncomplex+1
-	return ncomplex
+		ntotal += syllables
+	return ncomplex, ntotal
+
 
 
 
