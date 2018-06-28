@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Security-policy" cotent="script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<!--<script src='./extension.js'></script>  -->
+<!-- ---- Include the above in your HEAD tag -------- -->
+<style>
+
+.bar-step {
+    position:absolute;
+    margin-top:-20px;
+    z-index:1;
+    font-size:12px;
+}
+
+.label-txt {
+    float: left;
+}
+.gradient{
+    background: red; /* For browsers that do not support gradients */
+    background: linear-gradient(to right, green, red); /* Standard syntax (must be last) */
+}
+.label-line {
+    float: right;
+    background: #000;
+    height:50px;
+    width:1px;
+    margin-left: 5px;
+}
+
+.label-percent {
+    float: right;
+    margin-left: 5px;   
+}
+</style>
+</head>
+<body>
+<div class="container" id="myPopup">
+    <div class="row"><br>
+	    <div class="col-xs-12">
+    	    <div class="progress">
+                <div class="bar-step" style="left: 50%">
+                    <div class="label-txt">Nice long text for test</div>
+                    <div class="label-percent">75</div>
+                    <div class="label-line"></div>
+                    
+                </div>
+                <!--
+                <div class="bar-step" style="left: 10%">
+                    <div class="label-txt">Adam Bray Mark</div>
+                    <div class="label-percent">10%</div>
+                    <div class="label-line"></div>
+                </div>
+                
+                <div class="bar-step" style="left: 55%">
+                    <div class="label-txt">Testing 123</div>
+                    <div class="label-percent">55%</div>
+                    <div class="label-line"></div>
+                </div>
+                -->
+  			    <div class="progress-bar gradient" style="width: 100%;"></div>
+		       </div>
+	        </div>
+	    </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, render_template
 import nltk
 import pickle,spacy
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -56,6 +56,12 @@ def buildhashtable(wordlist, classlist):
 wordslist, classlist = getwordslist()
 dic = buildhashtable(wordslist, classlist)
 #print(dic)
+
+@app.route('/<string:page_name>/')
+def render_static(page_name):
+	return render_template('%s.html' % page_name)
+
+
 
 @app.route('/postmethod', methods = ['POST'])
 def get_post_email_data():
