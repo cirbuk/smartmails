@@ -15,14 +15,14 @@ app = Flask(__name__)
 CORS(app)
 
 #nlp1=spacy.load("tone_model")
-obj_clf=pickle.load(open('training_models/subjectivity/subj_clf.joblib.pkl',"rb"))
-tone_clf=pickle.load(open('training_models/tone/tone_clf.joblib.pkl',"rb"))
-polite_clf=pickle.load(open('training_models/politeness/classifier.joblib.pkl',"rb"))
+obj_clf=pickle.load(open('training_models/subjectivity/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
+tone_clf=pickle.load(open('training_models/tone/tone_clf.joblib.pkl',"rb"), encoding = "latin1")
+polite_clf=pickle.load(open('training_models/politeness/classifier.joblib.pkl',"rb"), encoding = "latin1")
 print('Loaded SV classifier')
 
-tf=pickle.load(open('training_models/subjectivity/vectorizer.joblib.pkl',"rb"))
-tf_tone=pickle.load(open('training_models/tone/vectorizer.joblib.pkl',"rb"))
-tf_polite=pickle.load(open('training_models/politeness/vectorizer.joblib.pkl', "rb"))
+tf=pickle.load(open('training_models/subjectivity/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
+tf_tone=pickle.load(open('training_models/tone/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
+tf_polite=pickle.load(open('training_models/politeness/vectorizer.joblib.pkl', "rb"), encoding = "latin1")
 
 print('vectorizer loaded')
 wordslist = []
@@ -77,7 +77,7 @@ def get_post_email_data():
 	if resList==[]:
 		return json.dumps({})
 	print(resList)
-	#sentence_count_length = sentence_count(resList)
+	sentence_count_length = sentence_count(noisefreedata)
 	question_count_length = question_count(resList)
 	processedData=getPunctFreeString(resList)
 
@@ -103,19 +103,30 @@ def get_post_email_data():
 	#doc1=nlp1(processedData.decode('utf-8'))
 	complex_words_length, syllable_count = getComplexWords(resList)
 
-
+	scores['corrections']="No corrections, your email is good!"
+	correction = ""
 	scores['word_count']=word_count_length
-	#scores['sentence_count'] = sentence_count_length
+	scores['sentence_count'] = sentence_count_length
 	scores['question_count']=question_count_length
 	scores['complex_words']=complex_words_length
-	#if sentence_count_length == 0 or word_count_length == 0:
-	#	scores['reading_level']="Not Available"
-	#else:
-	#	scores['reading_level']=0.39 * word_count_length / sentence_count_length + 11.8 * syllable_count / word_count_length - 15.59;
+	if sentence_count_length == 0 or word_count_length == 0:
+		scores['reading_level']="Not Available"
+	else:
+		scores['reading_level']=0.39 * word_count_length / sentence_count_length + 11.8 * syllable_count / word_count_length - 15.59;
 	scores['politeness']={'polite':round(polite_score[0, 0], 4), "rude": round(polite_score[0, 1], 4)}
+	if round(polite_score[0, 1], 4) > 0.6:
+		correction += "Your email may be too rude."
 	scores['subjectivity']=round(obj_score_modified[0,1],4)
+	if round(obj_score_modified[0,1],4) > 0.85:
+		correction += "Your email may be too subjective."
+		print(correction)
 	scores['objectivity']=round(obj_score_modified[0,0],4)
+	if round(obj_score_modified[0,0],4) > 0.75:
+		correction += "Your email may be too objective."
 	scores['tone']={'anger':round(tone_score[0,0],4),'fear':round(tone_score[0,1],4),'joy':round(tone_score[0,2],4),'love':round(tone_score[0,3],4),'sadness':round(tone_score[0,4],4),'surprise':round(tone_score[0,5],4)}
+	scores['corrections'] = correction
+
+
 	print(scores)
 	#sentiment = classifier.classify(build_bag_of_words(resList))
 	#print(sentiment)
@@ -165,21 +176,26 @@ def question_count(tokens):
 		else:
 			i += 1
 	return count
-'''
-def sentence_count(tokens):
+
+def sentence_count(str_tokens):
+	tokens = str_tokens.split()
+	wordslist = []
+	for token in tokens:
+		wordslist.append(token)
+	print(wordslist)
 	i = 0
 	count = 0
 	endofsent = [".", "?", "!"]
-	while i < len(tokens):
-		if tokens[i] in endofsent:
+	while i < len(wordslist):
+		if wordslist[i] in endofsent:
 			i += 1
 			count += 1
-			while i < len(tokens) and tokens[i] in endofsent:
+			while i < len(wordslist) and wordslist[i] in endofsent:
 				i += 1
 		else:
 			i += 1
 	return count
-	'''
+	
 
 def getPunctFreeString(list):
 	str1=''
