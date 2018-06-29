@@ -1,15 +1,20 @@
 from flask import Flask, render_template, request, jsonify, render_template
 import nltk
-import pickle,spacy
+import pickle
+import json
+import string
+#import sklearn
+
+
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.externals import joblib
 from sklearn.metrics import accuracy_score
 from sklearn.linear_model import SGDClassifier
+
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 #uses the sentiment lexicon and morphological analysis to analyze sentences
 #Must perform nltk.download('vader_lexicon')
-import json
-import string
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
@@ -70,7 +75,6 @@ def get_post_email_data():
 	#useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
 	noisefreedata = removenoise(jsdata)
 	word_count_length = word_count(noisefreedata)
-
 	tokens = nltk.tokenize.TreebankWordTokenizer()
 	tokenlist = tokens.tokenize(noisefreedata)
 	resList = lemmatizeText(tokenlist)
