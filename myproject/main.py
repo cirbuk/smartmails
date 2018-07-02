@@ -71,6 +71,8 @@ def render_static(page_name):
 @app.route('/postmethod', methods = ['POST'])
 def get_post_email_data():
 	jsdata = request.form['data']
+	print(jsdata)
+
 	#content=json.loads(jsdata)[0]
 	#useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
 	noisefreedata = removenoise(jsdata)

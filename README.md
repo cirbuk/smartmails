@@ -9,4 +9,4 @@ Run below command:
   import nltk
   nltk.download('vader_lexicon')
 # smartmails
-run "python app1.py" in terminal to start the project after navigating to the myproject directory
+run "gunicorn -b :5000 main:app" in terminal to start the project after navigating to the myproject directory
