@@ -113,10 +113,6 @@ def get_post_email_data():
 	scores['sentence_count'] = sentence_count_length
 	scores['question_count']=question_count_length
 	scores['complex_words']=complex_words_length
-	if sentence_count_length == 0 or word_count_length == 0:
-		scores['reading_level']="Not Available"
-	else:
-		scores['reading_level']=0.39 * word_count_length / sentence_count_length + 11.8 * syllable_count / word_count_length - 15.59;
 	scores['politeness']={'polite':round(polite_score[0, 0], 4), "rude": round(polite_score[0, 1], 4)}
 	if round(polite_score[0, 1], 4) > 0.6:
 		correction += "Your email may be too rude."
