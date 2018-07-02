@@ -2,10 +2,8 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Security-policy" cotent="script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'">
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+<!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>-->
 <!--<script src='./extension.js'></script>  -->
 <!-- ---- Include the above in your HEAD tag -------- -->
 <style>
@@ -21,8 +19,8 @@
     float: left;
 }
 .gradient{
-    background: red; /* For browsers that do not support gradients */
-    background: linear-gradient(to right, green, red); /* Standard syntax (must be last) */
+    background: white; /* For browsers that do not support gradients */
+    background: linear-gradient(to right, red 0%, green 50%,blue 90%); /* Standard syntax (must be last) */
 }
 .label-line {
     float: right;
@@ -39,34 +37,98 @@
 </style>
 </head>
 <body>
-<div class="container" id="myPopup">
-    <div class="row"><br>
-	    <div class="col-xs-12">
-    	    <div class="progress">
-                <div class="bar-step" style="left: 50%">
-                    <div class="label-txt">Nice long text for test</div>
-                    <div class="label-percent">75</div>
-                    <div class="label-line"></div>
-                    
-                </div>
-                <!--
-                <div class="bar-step" style="left: 10%">
-                    <div class="label-txt">Adam Bray Mark</div>
-                    <div class="label-percent">10%</div>
-                    <div class="label-line"></div>
-                </div>
-                
-                <div class="bar-step" style="left: 55%">
-                    <div class="label-txt">Testing 123</div>
-                    <div class="label-percent">55%</div>
-                    <div class="label-line"></div>
-                </div>
-                -->
-  			    <div class="progress-bar gradient" style="width: 100%;"></div>
-		       </div>
-	        </div>
-	    </div>
-    </div>
+<div class="container" id="review">
+<div class="container" style="width: 400px">
+<h4> Positivity <button type="button" class="btn btn-primary btn-xs float-right" id="pos_review">Click</button></h4>
+<div class="alert alert-error collapse" role="alert" id="posalert">
+  <span>
+    <p id="posreview"></p>
+  </span>
+</div>
+<div class="progress">
+  <div class="progress-bar bg-success" role="progressbar" style="width:40%" id="pos">
+    Positive
+  </div>
+  <div class="progress-bar bg-warning" role="progressbar" style="width:30%" id="neu">
+    Neutral
+  </div>
+  <div class="progress-bar bg-danger" role="progressbar" style="width:30%" id="neg">
+    Negative
+  </div>    
+</div>
+</div>
+
+<div class="container" style="width: 400px">
+<h4> Politeness <button type="button" class="btn btn-primary btn-xs float-right" id="pol_review">Click</button></h4>
+<div class="alert alert-error collapse" role="alert" id="polalert">
+  <span>
+    <p id="polreview"></p>
+  </span>
+</div>
+<div class="progress">
+  <div class="progress-bar bg-success" role="progressbar" style="width:50%" id="polite">
+    Polite
+  </div>
+  <div class="progress-bar bg-danger" role="progressbar" style="width:50%" id="rude">
+    Rude
+  </div>
+</div>
+</div>
+
+<div class="container" style="width: 400px">
+<h4> Subjectivity <button type="button" class="btn btn-primary btn-xs float-right" id="subj_review">Click</button></h4>
+<div class="alert alert-error collapse" role="alert" id="subjalert">
+  <span>
+    <p id="subjreview"></p>
+  </span>
+</div>
+<div class="progress">
+  <div class="progress-bar bg-success" role="progressbar" style="width:70%" id="subj">
+    Subjective
+  </div>
+  <div class="progress-bar bg-danger" role="progressbar" style="width:30%" id="obj">
+    Objective
+  </div>
+</div>
+</div>
+
+<div class="container" style="width: 600px" id="tones">
+<h4> Tone <button type="button" class="btn btn-primary btn-xs float-right" id="tone_review">Click</button></h4>
+<div class="alert alert-error collapse" role="alert" id="tonealert">
+  <span>
+    <p id="tonereview"></p>
+  </span>
+</div>
+<div class="progress">
+  <div class="progress-bar bg-success" role="progressbar" style="width:15%" id="joy">
+    Joy
+  </div>
+  <div class="progress-bar bg-warning" role="progressbar" style="width:20%" id="sadness">
+    Sadness
+  </div>
+  <div class="progress-bar bg-danger" role="progressbar" style="width:15%" id="anger">
+    Anger
+  </div>
+  <div class="progress-bar" role="progressbar" style="width:20%" id="surprise">
+    Surprise
+  </div>
+  <div class="progress-bar bg-secondary" style="width:15%" id="fear">
+    Fear
+  </div>
+  <div class="progress-bar bg-info" role="progressbar" style="width:15%" id="love">
+    Love
+  </div>
+</div>
+</div>
+<div class="container" style="width: 400px">
+    <p id='word_count'> WORD COUNT: </p>
+</div>
+<div class="container" style="width: 400px">
+    <p id='question_count'> QUESTION COUNT: </p>
+</div>
+<div class="container" style="width: 400px">
+    <p id='com_words'> COMPLICATED WORDS: </p>
+</div>
 </div>
 </body>
 </html>
