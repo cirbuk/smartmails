@@ -103,11 +103,11 @@ def get_post_email_data():
 	print(obj_score_modified)
 
 	sentenceScores=getSentenceScores(sentences)
-	getBadSentences(sentenceScores)
+	errors = getBadSentences(sentenceScores)
 	print("Printing scores")
 	i=0
 	for item in sentenceScores:
-		print(item,sentences[i])
+		#print(item,sentences[i])
 		i+=1
 
 	#print(subj_res[0])
@@ -128,8 +128,8 @@ def get_post_email_data():
 	scores['objectivity']=round(obj_score_modified[0,0],4)
 	scores['tone']={'anger':round(tone_score[0,0],4),'fear':round(tone_score[0,1],4),'joy':round(tone_score[0,2],4),'love':round(tone_score[0,3],4),'sadness':round(tone_score[0,4],4),'surprise':round(tone_score[0,5],4)}
 
-
-	#print(scores)
+	scores['errors']=errors
+	print(scores)
 	#sentiment = classifier.classify(build_bag_of_words(resList))
 	#print(sentiment)
 	return json.dumps(scores)
@@ -234,26 +234,27 @@ def getBadSentences(sentenceScores):
 			errors.append("length")
 		if sentenceScores[i]["complex_words"] > 3:
 			errors.append("complexity")
-		if sentenceScores[i]["neu"] > 0.65:
+		if sentenceScores[i]["neu"] > 0.8:
 			errors.append("neutral")
 		if sentenceScores[i]["neg"] > 0.6:
 			errors.append("negative")	
-		if sentenceScores[i]["politeness"]["polite"] < 0.5:
+		if sentenceScores[i]["politeness"]["polite"] < 0.35:
 			errors.append("rude")
 		if sentenceScores[i]["objectivity"] > 0.6:
 			errors.append("objective")
-		maximum = -1
-		key = ''
-		for k,v in sentenceScores[i]["tone"].items():
-			if v > maximum:
-				maximum = v
-				key = k
-		if key in ["anger", "fear", "sadness"]:
-			errors.append(key)
+		if sentenceScores[i]["neu"] < 0.7:
+			maximum = -1
+			key = ''
+			for k,v in sentenceScores[i]["tone"].items():
+				if v > maximum:
+					maximum = v
+					key = k
+			if key in ["anger", "fear", "sadness"]:
+				errors.append(key)
 
 		result.append((i, errors))
 		i += 1
-	print(result)
+	return result
 
 def getPunctFreeString(list):
 	str1=''
