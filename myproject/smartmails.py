@@ -20,14 +20,14 @@ app = Flask(__name__)
 CORS(app)
 
 #nlp1=spacy.load("tone_model")
-obj_clf=pickle.load(open('training_models/subjectivity/subj_clf.joblib.pkl',"rb"))
-tone_clf=pickle.load(open('training_models/tone/tone_clf.joblib.pkl',"rb"))
-polite_clf=pickle.load(open('training_models/politeness/classifier.joblib.pkl',"rb"))
+obj_clf=pickle.load(open('training_models/subjectivity/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
+tone_clf=pickle.load(open('training_models/tone/tone_clf.joblib.pkl',"rb"), encoding = "latin1")
+polite_clf=pickle.load(open('training_models/politeness/classifier.joblib.pkl',"rb"), encoding = "latin1")
 print('Loaded SV classifier')
 
-tf=pickle.load(open('training_models/subjectivity/vectorizer.joblib.pkl',"rb"))
-tf_tone=pickle.load(open('training_models/tone/vectorizer.joblib.pkl',"rb"))
-tf_polite=pickle.load(open('training_models/politeness/vectorizer.joblib.pkl', "rb"))
+tf=pickle.load(open('training_models/subjectivity/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
+tf_tone=pickle.load(open('training_models/tone/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
+tf_polite=pickle.load(open('training_models/politeness/vectorizer.joblib.pkl', "rb"), encoding = "latin1")
 
 print('vectorizer loaded')
 wordslist = []
@@ -103,6 +103,7 @@ def get_post_email_data():
 	print(obj_score_modified)
 
 	sentenceScores=getSentenceScores(sentences)
+	getBadSentences(sentenceScores)
 	print("Printing scores")
 	i=0
 	for item in sentenceScores:
@@ -149,6 +150,7 @@ def removenoise(input):
 	finalstr=''
 	for string in result:
 		finalstr+=string+' '
+	finalstr = finalstr[:len(finalstr) - 1]
 	return(finalstr)
 
 def lemmatizeText(tokenlist):
@@ -183,7 +185,14 @@ def createSentenceList(text):
 	currSentence=''
 	punct=['.','!','?']
 	i=0
+	print("here it is")
+	print(text[len(text)-1])
+	if text[len(text) - 1] not in punct:
+		text+= "."
+		print("added punctuation")
+		print(text)
 	while i<len(text):
+
 		if text[i] not in punct:
 			currSentence+=text[i]
 			i+=1
@@ -193,6 +202,7 @@ def createSentenceList(text):
 			while i<len(text) and text[i] in punct:
 				i+=1
 			currSentence=''
+
 	return sentences
 
 def getSentenceScores(sentences):
@@ -215,7 +225,35 @@ def getSentenceScores(sentences):
 		sentenceScores.append(scores)
 	return sentenceScores
 
-	
+def getBadSentences(sentenceScores):
+	result = []
+	i = 0
+	while i < len(sentenceScores):
+		errors = []
+		if sentenceScores[i]['word_count'] > 15:
+			errors.append("length")
+		if sentenceScores[i]["complex_words"] > 3:
+			errors.append("complexity")
+		if sentenceScores[i]["neu"] > 0.65:
+			errors.append("neutral")
+		if sentenceScores[i]["neg"] > 0.6:
+			errors.append("negative")	
+		if sentenceScores[i]["politeness"]["polite"] < 0.5:
+			errors.append("rude")
+		if sentenceScores[i]["objectivity"] > 0.6:
+			errors.append("objective")
+		maximum = -1
+		key = ''
+		for k,v in sentenceScores[i]["tone"].items():
+			if v > maximum:
+				maximum = v
+				key = k
+		if key in ["anger", "fear", "sadness"]:
+			errors.append(key)
+
+		result.append((i, errors))
+		i += 1
+	print(result)
 
 def getPunctFreeString(list):
 	str1=''
