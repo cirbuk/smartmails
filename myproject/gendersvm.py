@@ -35,18 +35,22 @@ def trainSVClassifier():
         j=0
         for i in f:
             j+=1 
-            data.append((i,'male'))
+            sent[] = i.split()
+            if len(sent) > 5:
+                data.append((i,'male'))
             #data_labels.append('anger')
-            if j==niters:
-                break
+                if j==niters:
+                    break
     with open("./gender_data/femaledata/female") as f:
         j=0
         for i in f:
             j+=1 
-            data.append((i,'female'))
-            #data_labels.append('fear')
-            if j==niters:
-                break
+            sent[] = i.split()
+            if len(sent) > 5:
+                data.append((i,'female'))
+            #data_labels.append('anger')
+                if j==niters:
+                    break
     
     print(len(data))
     shuffle(data)   
@@ -64,7 +68,7 @@ def trainSVClassifier():
     X_test=matrix[split:]
     y_test=data_labels[split:]
     print('Started training ')
-    clf_svm=SGDClassifier(loss='modified_huber', penalty='l2',alpha=1e-3,max_iter=50,tol=None,random_state=42)
+    clf_svm=SGDClassifier(loss='hinge', penalty='l2',alpha=1e-3,max_iter=50,tol=None,random_state=42)
     clf_svm = clf_svm.fit(X=X_train, y=y_train)
     predict=clf_svm.predict(X_test)
     print(len(predict))
