@@ -81,7 +81,8 @@ def get_post_email_data():
 
 	doc = nlp(noisefreedata)
 	for token in doc:
-		if token.pos_ == "ADV" and token.tag_ == "RB":
+		text = str(token.text)
+		if token.pos_ == "ADV" and text[len(text) - 1:] == "y":
 			adv_length += 1
 
 	word_count_length = word_count(noisefreedata)
