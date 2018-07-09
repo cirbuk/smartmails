@@ -3,7 +3,10 @@ import nltk
 import pickle
 import json
 import string
+import spacy
 #import sklearn
+nlp = spacy.load('en_core_web_sm')
+
 
 
 
@@ -73,11 +76,19 @@ def get_post_email_data():
 	jsdata = request.form['data']
 	#content=json.loads(jsdata)[0]
 	#useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
+	adv_length = 0
 	noisefreedata = removenoise(jsdata)
+
+	doc = nlp(noisefreedata)
+	for token in doc:
+		if token.pos_ == "ADV" and token.tag_ == "RB":
+			adv_length += 1
+
 	word_count_length = word_count(noisefreedata)
 	tokens = nltk.tokenize.TreebankWordTokenizer()
 	tokenlist = tokens.tokenize(noisefreedata)
 	resList = lemmatizeText(tokenlist)
+
 	if resList==[]:
 		return json.dumps({})
 	print(resList)
@@ -123,6 +134,7 @@ def get_post_email_data():
 	scores['word_count']=word_count_length
 	scores['question_count']=question_count_length
 	scores['complex_words']=complex_words_length
+	scores['adverbs_count'] = adv_length
 	scores['politeness']={'polite':round(polite_score[0, 0], 4), "rude": round(polite_score[0, 1], 4)}
 	scores['subjectivity']=round(obj_score_modified[0,1],4)
 	scores['objectivity']=round(obj_score_modified[0,0],4)
