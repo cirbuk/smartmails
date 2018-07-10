@@ -76,14 +76,16 @@ def get_post_email_data():
 	jsdata = request.form['data']
 	#content=json.loads(jsdata)[0]
 	#useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
-	adv_length = 0
+	
 	noisefreedata = removenoise(jsdata)
-
+	adv_length = 0
+	advs_list = []
 	doc = nlp(noisefreedata)
 	for token in doc:
 		text = str(token.text)
 		if token.pos_ == "ADV" and text[len(text) - 1:] == "y":
 			adv_length += 1
+			advs_list.append(str(token.text))
 
 	word_count_length = word_count(noisefreedata)
 	tokens = nltk.tokenize.TreebankWordTokenizer()
@@ -129,8 +131,9 @@ def get_post_email_data():
 	#print(polite_score)
 	#print(tone_score)
 	#doc1=nlp1(processedData.decode('utf-8'))
-	complex_words_length, syllable_count = getComplexWords(resList)
+	complex_words_length, syllable_count, complexwordslist = getComplexWords(resList)
 
+	print(advs_list)
 
 	scores['word_count']=word_count_length
 	scores['question_count']=question_count_length
@@ -140,8 +143,9 @@ def get_post_email_data():
 	scores['subjectivity']=round(obj_score_modified[0,1],4)
 	scores['objectivity']=round(obj_score_modified[0,0],4)
 	scores['tone']={'anger':round(tone_score[0,0],4),'fear':round(tone_score[0,1],4),'joy':round(tone_score[0,2],4),'love':round(tone_score[0,3],4),'sadness':round(tone_score[0,4],4),'surprise':round(tone_score[0,5],4)}
-
 	scores['errors']=errors
+	scores['complex_list'] = complexwordslist
+	scores['adverbs_list'] = advs_list
 	print(scores)
 	#sentiment = classifier.classify(build_bag_of_words(resList))
 	#print(sentiment)
@@ -223,7 +227,7 @@ def getSentenceScores(sentences):
 	sentenceScores=[]
 	for sentence in sentences:
 		sentence_length=word_count(sentence)
-		complex_words,syl=getComplexWords(sentence.split())
+		complex_words, syl, complexwordslist=getComplexWords(sentence.split())
 		scores=sid.polarity_scores(sentence)
 		obj_res,obj_score=obj_clf.predict(tf.transform([sentence])),obj_clf.predict_proba(tf.transform([sentence]))
 		tone_res,tone_score=tone_clf.predict(tf_tone.transform([sentence])),tone_clf.predict_proba(tf_tone.transform([sentence]))
@@ -280,6 +284,7 @@ def getPunctFreeString(list):
 def getComplexWords(text):
 	ncomplex=0
 	ntotal = 0
+	complexlist = []
 	for word in text:
 		#word.__str__()
 		syllables = 0
@@ -295,8 +300,9 @@ def getComplexWords(text):
 			syllables = 1
 		if syllables>=3:
 			ncomplex=ncomplex+1
+			complexlist.append(word)
 		ntotal += syllables
-	return ncomplex, ntotal
+	return ncomplex, ntotal, complexlist
 
 
 
