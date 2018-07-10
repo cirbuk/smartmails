@@ -139,27 +139,9 @@ def get_post_email_data():
 	if (sentence_count == 0 or word_count_length == 0):
 		reading_level = "Not Available"
 	else:
-		reading_level = 206.835 - 1.015*(word_count_length/sentence_count)-84.6*(syllable_count/word_count_length)
-		if reading_level > 90:
-			reading_grade = "5th grade"
-		else:
-			if reading_level > 80:
-				reading_grade = "6th grade"
-			else:
-				if reading_level > 70:
-					reading_grade = "7th grade"
-				else:
-					if reading_level > 60:
-						reading_grade = "8th to 9th grade"
-					else:
-						if reading_level > 50:
-							reading_grade = "10th to 12th grade"
-						else:
-							if reading_level > 30:
-								reading_grade = "College"
-							else:
-								reading_grade = "College Graduate"
-
+		reading_level = 0.39 * (word_count_length / sentence_count) + 11.8 * (syllable_count / word_count_length) - 15.59
+		if reading_level < 0:
+			reading_level = 0
 
 	print(advs_list)
 
@@ -177,7 +159,6 @@ def get_post_email_data():
 	scores['complex_list'] = complexwordslist
 	scores['adverbs_list'] = advs_list
 	scores['reading_level'] = reading_level
-	scores['reading_grade'] = reading_grade
 	print(scores)
 	#sentiment = classifier.classify(build_bag_of_words(resList))
 	#print(sentiment)
