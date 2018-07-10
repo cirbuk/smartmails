@@ -134,6 +134,8 @@ def get_post_email_data():
 	#doc1=nlp1(processedData.decode('utf-8'))
 	complex_words_length, syllable_count, complexwordslist = getComplexWords(resList)
 	reading_grade = ''
+
+	#based on this: https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests
 	if (sentence_count == 0 or word_count_length == 0):
 		reading_level = "Not Available"
 	else:
