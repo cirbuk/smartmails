@@ -82,7 +82,7 @@ def get_post_email_data():
 	advs_list = []
 	doc = nlp(noisefreedata)
 	for token in doc:
-		text = str(token.text)
+		text = token.text
 		if token.pos_ == "ADV" and text[len(text) - 1:] == "y":
 			adv_length += 1
 			advs_list.append(str(token.text))
@@ -162,7 +162,7 @@ def removenoise(input):
 	res2=[]
 	for string in res1:
 		res2+=string.split('&')
-	noise=['div','/div','br','nbsp;']
+	noise=['div','/div','br','nbsp;', 'mark', '/mark', 'style="background-color:#FFCBA4;"', 'style="background-color:#C3FDB8;"']
 	result=[x for x in res2 if x not in noise and x]
 	finalstr=''
 	for string in result:
@@ -251,11 +251,9 @@ def getBadSentences(sentenceScores):
 			errors.append("length")
 		if sentenceScores[i]["complex_words"] > 3:
 			errors.append("complexity")
-		if sentenceScores[i]["neu"] > 0.8:
-			errors.append("neutral")
 		if sentenceScores[i]["neg"] > 0.6:
 			errors.append("negative")	
-		if sentenceScores[i]["politeness"]["polite"] < 0.35:
+		if sentenceScores[i]["politeness"]["polite"] < 0.25:
 			errors.append("rude")
 		if sentenceScores[i]["objectivity"] > 0.6:
 			errors.append("objective")
