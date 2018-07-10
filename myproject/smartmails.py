@@ -23,14 +23,14 @@ app = Flask(__name__)
 CORS(app)
 
 #nlp1=spacy.load("tone_model")
-obj_clf=pickle.load(open('training_models/subjectivity/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
-tone_clf=pickle.load(open('training_models/tone/tone_clf.joblib.pkl',"rb"), encoding = "latin1")
-polite_clf=pickle.load(open('training_models/politeness/classifier.joblib.pkl',"rb"), encoding = "latin1")
+obj_clf=pickle.load(open('training_models/subjectivity/subj_clf.joblib.pkl',"rb"))
+tone_clf=pickle.load(open('training_models/tone/tone_clf.joblib.pkl',"rb"))
+polite_clf=pickle.load(open('training_models/politeness/classifier.joblib.pkl',"rb"))
 print('Loaded SV classifier')
 
-tf=pickle.load(open('training_models/subjectivity/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
-tf_tone=pickle.load(open('training_models/tone/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
-tf_polite=pickle.load(open('training_models/politeness/vectorizer.joblib.pkl', "rb"), encoding = "latin1")
+tf=pickle.load(open('training_models/subjectivity/vectorizer.joblib.pkl',"rb"))
+tf_tone=pickle.load(open('training_models/tone/vectorizer.joblib.pkl',"rb"))
+tf_polite=pickle.load(open('training_models/politeness/vectorizer.joblib.pkl', "rb"))
 
 print('vectorizer loaded')
 wordslist = []
@@ -168,7 +168,7 @@ def removenoise(input):
 	for string in result:
 		finalstr+=string+' '
 	finalstr = finalstr[:len(finalstr) - 1]
-	return(finalstr)
+	return finalstr
 
 def lemmatizeText(tokenlist):
 	stemmer=nltk.stem.WordNetLemmatizer()
