@@ -23,14 +23,14 @@ app = Flask(__name__)
 CORS(app)
 
 #nlp1=spacy.load("tone_model")
-obj_clf=pickle.load(open('training_models/subjectivity/subj_clf.joblib.pkl',"rb"))
-tone_clf=pickle.load(open('training_models/tone/tone_clf.joblib.pkl',"rb"))
-polite_clf=pickle.load(open('training_models/politeness/classifier.joblib.pkl',"rb"))
+obj_clf=pickle.load(open('training_models/subjectivity/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
+tone_clf=pickle.load(open('training_models/tone/tone_clf.joblib.pkl',"rb"), encoding = "latin1")
+polite_clf=pickle.load(open('training_models/politeness/classifier.joblib.pkl',"rb"), encoding = "latin1")
 print('Loaded SV classifier')
 
-tf=pickle.load(open('training_models/subjectivity/vectorizer.joblib.pkl',"rb"))
-tf_tone=pickle.load(open('training_models/tone/vectorizer.joblib.pkl',"rb"))
-tf_polite=pickle.load(open('training_models/politeness/vectorizer.joblib.pkl', "rb"))
+tf=pickle.load(open('training_models/subjectivity/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
+tf_tone=pickle.load(open('training_models/tone/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
+tf_polite=pickle.load(open('training_models/politeness/vectorizer.joblib.pkl', "rb"), encoding = "latin1")
 
 print('vectorizer loaded')
 wordslist = []
@@ -117,6 +117,7 @@ def get_post_email_data():
 	print(obj_score_modified)
 
 	sentenceScores=getSentenceScores(sentences)
+	sentence_count = len(sentences)
 	errors = getBadSentences(sentenceScores)
 	print("Printing scores")
 	i=0
@@ -132,10 +133,37 @@ def get_post_email_data():
 	#print(tone_score)
 	#doc1=nlp1(processedData.decode('utf-8'))
 	complex_words_length, syllable_count, complexwordslist = getComplexWords(resList)
+	reading_grade = ''
+	if (sentence_count == 0 or word_count_length == 0):
+		reading_level = "Not Available"
+	else:
+		reading_level = 206.835 - 1.015*(word_count_length/sentence_count)-84.6*(syllable_count/word_count_length)
+		if reading_level > 90:
+			reading_grade = "5th grade"
+		else:
+			if reading_level > 80:
+				reading_grade = "6th grade"
+			else:
+				if reading_level > 70:
+					reading_grade = "7th grade"
+				else:
+					if reading_level > 60:
+						reading_grade = "8th to 9th grade"
+					else:
+						if reading_level > 50:
+							reading_grade = "10th to 12th grade"
+						else:
+							if reading_level > 30:
+								reading_grade = "College"
+							else:
+								reading_grade = "College Graduate"
+
 
 	print(advs_list)
 
 	scores['word_count']=word_count_length
+	scores['sentence_count'] = sentence_count
+	scores['syllable_count'] = syllable_count
 	scores['question_count']=question_count_length
 	scores['complex_words']=complex_words_length
 	scores['adverbs_count'] = adv_length
@@ -146,6 +174,8 @@ def get_post_email_data():
 	scores['errors']=errors
 	scores['complex_list'] = complexwordslist
 	scores['adverbs_list'] = advs_list
+	scores['reading_level'] = reading_level
+	scores['reading_grade'] = reading_grade
 	print(scores)
 	#sentiment = classifier.classify(build_bag_of_words(resList))
 	#print(sentiment)
