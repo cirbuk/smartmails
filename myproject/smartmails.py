@@ -192,9 +192,13 @@ def lemmatizeText(tokenlist):
 def word_count(str_text):
 	text = str_text.split()
 	length = 0
+	punctuation = ['.', '!', '?', ',', ';', ':', '"', '-', '_', '“', '”']
+	punctuation2 = ["'"]
 	for token in text:
-		if token not in string.punctuation:
+		if token not in punctuation and token not in punctuation2:
 			length += 1
+			print(token)
+			print(length)
 	return length   
 
 def question_count(tokens):
