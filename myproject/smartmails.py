@@ -296,6 +296,7 @@ def getComplexWords(text):
 	ncomplex=0
 	ntotal = 0
 	complexlist = []
+	exceptions = ["terrible", "horrible", "laughable", "countable", "probable", "constable", "capable", "audible", "visible", "breakable", "flexible", "plausible", "tangible", "feasible", "palpable", "flammable", "unstable", "winnable", "losable"]
 	for word in text:
 		#word.__str__()
 		syllables = 0
@@ -309,7 +310,7 @@ def getComplexWords(text):
 					syllables = syllables + 1
 		if len(word) > 0 and syllables == 0 :
 			syllables = 1
-		if syllables>=3:
+		if syllables>=3 or word in exceptions:
 			ncomplex=ncomplex+1
 			complexlist.append(word)
 		ntotal += syllables
