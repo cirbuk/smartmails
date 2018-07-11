@@ -147,6 +147,7 @@ def get_post_email_data():
 			reading_level = 0
 	print(advs_list)
 
+
 	scores['word_count']=word_count_length
 	scores['sentence_count'] = sentence_count
 	scores['syllable_count'] = syllable_count
@@ -161,10 +162,16 @@ def get_post_email_data():
 	scores['complex_list'] = complexwordslist
 	scores['adverbs_list'] = advs_list
 	scores['reading_level'] = reading_level
+
+
+	overall_score = getOverallScore(scores)
+	scores['overall_index'] = overall_score
 	print(scores)
 	#sentiment = classifier.classify(build_bag_of_words(resList))
 	#print(sentiment)
 	return json.dumps(scores)
+
+
 
 def removenoise(input):
 	l=input.split()
@@ -302,7 +309,7 @@ def getComplexWords(text):
 	ncomplex=0
 	ntotal = 0
 	complexlist = []
-	exceptions = ["terrible", "horrible", "laughable", "countable", "probable", "constable", "capable", "audible", "visible", "breakable", "flexible", "plausible", "tangible", "feasible", "palpable", "flammable", "unstable", "winnable", "losable"]
+	exceptions = ["terrible", "horrible", "laughable", "countable", "probable", "constable", "capable", "audible", "visible", "breakable", "flexible", "plausible", "tangible", "feasible", "palpable", "flammable", "unstable", "winnable", "losable", "mashable", "flappable"]
 	for word in text:
 		#word.__str__()
 		syllables = 0
@@ -356,6 +363,21 @@ def modifysubjscore(text, score, wordcount):
 	return score
 
 
+def getOverallScore(scores):
+	total_score = 0
+	if scores["neg"] < 0.5:
+		total_score += (scores["pos"] + scores["neg"])*0.25 
+	else:
+		total_score += scores["pos"] * 0.25
+	total_score += scores["politeness"]["polite"]*0.25
+	if scores["objectivity"] < 0.6:
+		total_score += max(scores["objectivity"], scores["subjectivity"]) * 0.25
+	else:
+		total_score += scores["subjectivity"]*0.25
+
+
+	total_score += (scores["tone"]["love"] + scores["tone"]["joy"] + scores["tone"]["surprise"])*0.25
+	return total_score
 
 
 if __name__ == '__main__':
