@@ -6,35 +6,6 @@
 <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>-->
 <!--<script src='./extension.js'></script>  -->
 <!-- ---- Include the above in your HEAD tag -------- -->
-<style>
-
-.bar-step {
-    position:absolute;
-    margin-top:-20px;
-    z-index:1;
-    font-size:12px;
-}
-
-.label-txt {
-    float: left;
-}
-.gradient{
-    background: white; /* For browsers that do not support gradients */
-    background: linear-gradient(to right, red 0%, green 50%,blue 90%); /* Standard syntax (must be last) */
-}
-.label-line {
-    float: right;
-    background: #000;
-    height:50px;
-    width:1px;
-    margin-left: 5px;
-}
-
-.label-percent {
-    float: right;
-    margin-left: 5px;   
-}
-</style>
 </head>
 <body>
 
@@ -113,41 +84,44 @@
   </span>
 </div>
 <div class="progress">
-  <div class="progress-bar bg-success" role="progressbar" style="width:15%" id="joy">
+  <div class="progress-bar bg-success" role="progressbar" style="width:17%" id="joy">
     Joy
   </div>
-  <div class="progress-bar bg-warning" role="progressbar" style="width:20%" id="sadness">
-    Sadness
-  </div>
-  <div class="progress-bar bg-danger" role="progressbar" style="width:15%" id="anger">
-    Anger
-  </div>
-  <div class="progress-bar" role="progressbar" style="width:20%" id="surprise">
-    Surprise
-  </div>
-  <div class="progress-bar bg-secondary" style="width:15%" id="fear">
-    Fear
-  </div>
-  <div class="progress-bar bg-info" role="progressbar" style="width:15%" id="love">
+    <div class="progress-bar bg-info" role="progressbar" style="width:17%" id="love">
     Love
   </div>
+  <div class="progress-bar" role="progressbar" style="width:16%" id="surprise">
+    Surprise
+  </div>
+  <div class="progress-bar bg-secondary" style="width:16%" id="fear">
+    Fear
+  </div>
+  <div class="progress-bar bg-warning" role="progressbar" style="width:17%" id="sadness">
+    Sadness
+  </div>
+  <div class="progress-bar bg-danger" role="progressbar" style="width:17%" id="anger">
+    Anger
+  </div>
+
+
+
 </div>
 </div>
 <div class="container" style="width: 400px">
-    <p id='word_count'> WORD COUNT: </p>
+    <p id='word_count'> WORD COUNT: 0</p>
 
-    <p id='question_count'> QUESTION COUNT: </p>
+    <p id='question_count'> QUESTION COUNT: 0</p>
 
-    <p id='com_words'> COMPLICATED WORDS: </p>
+    <p id='com_words'> COMPLICATED WORDS: 0</p>
 
-    <p id='adverbs_count'> ADVERBS COUNT: </p>
+    <p id='adverbs_count'> ADVERBS COUNT: 0</p>
 
-    <p id='reading_level'> READING LEVEL: </p>
+    <p id='reading_level'> READING LEVEL: 0</p>
 </div>
 
 </div>
 <div class="container" style="width: 400px">
-   <button type="button" class="btn btn-info btn-xs float-center" id="corrections">Corrections</button>
+   <button type="button" class="btn btn-info btn-xs float-center" id="corrections">Improvements</button>
 </div>
 </body>
 </html>
