@@ -23,6 +23,8 @@ app = Flask(__name__)
 CORS(app)
 
 #nlp1=spacy.load("tone_model")
+
+#remove encoding = "latin1" for python 2
 obj_clf=pickle.load(open('training_models/subjectivity/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
 tone_clf=pickle.load(open('training_models/tone/tone_clf.joblib.pkl',"rb"), encoding = "latin1")
 polite_clf=pickle.load(open('training_models/politeness/classifier.joblib.pkl',"rb"), encoding = "latin1")
@@ -139,6 +141,7 @@ def get_post_email_data():
 	if (sentence_count == 0 or word_count_length == 0):
 		reading_level = "Not Available"
 	else:
+		#cast as float for python 2
 		reading_level = 0.39 * (word_count_length / sentence_count) + 11.8 * (syllable_count / word_count_length) - 15.59
 		if reading_level < 0:
 			reading_level = 0
