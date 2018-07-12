@@ -6,6 +6,20 @@
 <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>-->
 <!--<script src='./extension.js'></script>  -->
 <!-- ---- Include the above in your HEAD tag -------- -->
+<style>
+.legend { list-style: none; }
+.legend li { float: left; margin-right: 10px; }
+.legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
+/* your colors */
+.legend .complex_words { background-color: #FFCBA4; }
+.legend .adverbs { background-color: #C3FDB8; }
+.legend .negative { background-color: #FFF380; }
+.legend .rude { background-color: #E0B0FF; }
+.legend .objective { background-color: #C6DEFF; }
+.legend .long { background-color: #D1D0CE; }
+
+</style>
+
 </head>
 <body>
 <div class="container" id='template'>
@@ -121,6 +135,18 @@
 </div>
 
 </div>
+<div class="container" style="width: 500px" id = "improvements_legend">
+   <h6>This is Read Only, all changes made will be lost. To revert to editing click on the Improvements button again.</h6>
+   <ul class="legend" id = "legend_list">
+    <li><span class="complex_words"></span>Complex Words</li><br>
+    <li><span class="adverbs"></span>Adverbs</li><br>
+    <li><span class="negative"></span>Negative</li><br>
+    <li><span class="rude"></span>Rude</li><br>
+    <li><span class="objective"></span>Objective</li><br>
+    <li><span class="long"></span>Long</li>
+</ul>
+</div>
+
 <div class="container" style="width: 500px" id="improve_button">
    <button type="button" class="btn btn-info btn-xs float-center" id="corrections">Improvements</button>
 </div>
