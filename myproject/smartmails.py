@@ -82,10 +82,11 @@ def get_post_email_data():
 	noisefreedata = removenoise(jsdata)
 	adv_length = 0
 	advs_list = []
+	exceptions = ["why"]
 	doc = nlp(noisefreedata)
 	for token in doc:
 		text = token.text
-		if token.pos_ == "ADV" and text[len(text) - 1:] == "y":
+		if token.pos_ == "ADV" and text[len(text) - 1:] == "y" and token.text not in exceptions:
 			adv_length += 1
 			advs_list.append(str(token.text))
 
@@ -272,28 +273,21 @@ def getBadSentences(sentenceScores):
 	result = []
 	i = 0
 	while i < len(sentenceScores):
-		errors = []
-		if sentenceScores[i]['word_count'] > 15:
-			errors.append("length")
-		if sentenceScores[i]["complex_words"] > 3:
-			errors.append("complexity")
+		errors = ""
+
 		if sentenceScores[i]["neg"] > 0.6:
 			errors.append("negative")	
-		if sentenceScores[i]["politeness"]["polite"] < 0.25:
+			
+		elif sentenceScores[i]["politeness"]["polite"] < 0.25:
 			errors.append("rude")
-		if sentenceScores[i]["objectivity"] > 0.6:
+			
+		elif sentenceScores[i]["objectivity"] > 0.6:
 			errors.append("objective")
-		if sentenceScores[i]["neu"] < 0.7:
-			maximum = -1
-			key = ''
-			for k,v in sentenceScores[i]["tone"].items():
-				if v > maximum:
-					maximum = v
-					key = k
-			if key in ["anger", "fear", "sadness"]:
-				errors.append(key)
+			
+		elif sentenceScores[i]['word_count'] > 15:
+			errors.append("length")	
 
-		result.append((i, errors))
+		result.append(errors)
 		i += 1
 	return result
 
