@@ -121,7 +121,7 @@ def get_post_email_data():
 
 	sentenceScores=getSentenceScores(sentences)
 	sentence_count = len(sentences)
-	errors = getBadSentences(sentenceScores)
+	errors = getBadSentences(sentenceScores, sentences)
 	print("Printing scores")
 	i=0
 	for item in sentenceScores:
@@ -241,7 +241,7 @@ def createSentenceList(text):
 			currSentence+=text[i]
 			i+=1
 		else:
-			sentences.append(currSentence)
+			sentences.append(currSentence + text[i])
 			i+=1
 			while i<len(text) and text[i] in punct:
 				i+=1
@@ -269,7 +269,7 @@ def getSentenceScores(sentences):
 		sentenceScores.append(scores)
 	return sentenceScores
 
-def getBadSentences(sentenceScores):
+def getBadSentences(sentenceScores, sentences):
 	result = []
 	i = 0
 	while i < len(sentenceScores):
@@ -277,15 +277,16 @@ def getBadSentences(sentenceScores):
 
 		if sentenceScores[i]["neg"] > 0.6:
 			errors += "negative"
-		elif sentenceScores[i]["politeness"]["rude"] > 0.6:
+		elif sentenceScores[i]["politeness"]["rude"] > 0.65:
 			errors += "rude"
 		elif sentenceScores[i]["objectivity"] > 0.6:
 			errors += "objective"
 		elif sentenceScores[i]['word_count'] > 15:
 			errors += "length"
 
-		result.append(errors)
+		result.append([errors, sentences[i][-1], sentences[i].split()[0]])
 		i += 1
+
 	return result
 
 def getPunctFreeString(list):
