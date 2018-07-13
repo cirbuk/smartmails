@@ -17,4 +17,4 @@ RUN python3 -m spacy download en_core_web_sm
 COPY myproject/ .
 
 EXPOSE $PORT
-CMD gunicorn -b :$PORT main:app
+CMD gunicorn -b :$PORT smartmails:app
