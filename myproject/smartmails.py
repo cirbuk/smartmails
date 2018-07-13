@@ -276,16 +276,13 @@ def getBadSentences(sentenceScores):
 		errors = ""
 
 		if sentenceScores[i]["neg"] > 0.6:
-			errors.append("negative")	
-			
-		elif sentenceScores[i]["politeness"]["polite"] < 0.25:
-			errors.append("rude")
-			
+			errors += "negative"
+		elif sentenceScores[i]["politeness"]["rude"] > 0.6:
+			errors += "rude"
 		elif sentenceScores[i]["objectivity"] > 0.6:
-			errors.append("objective")
-			
+			errors += "objective"
 		elif sentenceScores[i]['word_count'] > 15:
-			errors.append("length")	
+			errors += "length"
 
 		result.append(errors)
 		i += 1
