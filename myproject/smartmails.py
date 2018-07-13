@@ -7,9 +7,6 @@ import spacy
 #import sklearn
 nlp = spacy.load('en_core_web_sm')
 
-import nltk
-nltk.download('wordnet')
-nltk.download('vader_lexicon')
 
 
 
@@ -124,7 +121,7 @@ def get_post_email_data():
 
 	sentenceScores=getSentenceScores(sentences)
 	sentence_count = len(sentences)
-	errors = getBadSentences(sentenceScores,sentences)
+	errors = getBadSentences(sentenceScores, sentences)
 	print("Printing scores")
 	i=0
 	for item in sentenceScores:
@@ -244,7 +241,7 @@ def createSentenceList(text):
 			currSentence+=text[i]
 			i+=1
 		else:
-			sentences.append(currSentence)
+			sentences.append(currSentence + text[i])
 			i+=1
 			while i<len(text) and text[i] in punct:
 				i+=1
@@ -272,26 +269,24 @@ def getSentenceScores(sentences):
 		sentenceScores.append(scores)
 	return sentenceScores
 
-def getBadSentences(sentenceScores,sentences):
+def getBadSentences(sentenceScores, sentences):
 	result = []
 	i = 0
 	while i < len(sentenceScores):
 		errors = ""
 
 		if sentenceScores[i]["neg"] > 0.6:
-			errors+="negative"	
-			
-		elif sentenceScores[i]["politeness"]["polite"] < 0.25:
-			errors+="rude"
-			
+			errors += "negative"
+		elif sentenceScores[i]["politeness"]["rude"] > 0.65:
+			errors += "rude"
 		elif sentenceScores[i]["objectivity"] > 0.6:
-			errors+="objective"
-			
+			errors += "objective"
 		elif sentenceScores[i]['word_count'] > 15:
-			errors+="length"	
+			errors += "length"
 
-		result.append([errors,sentences[i][-1],sentences[i].split()[0]])
+		result.append([errors, sentences[i][-1], sentences[i].split()[0]])
 		i += 1
+
 	return result
 
 def getPunctFreeString(list):
