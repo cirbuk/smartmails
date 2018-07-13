@@ -7,9 +7,6 @@ import spacy
 #import sklearn
 nlp = spacy.load('en_core_web_sm')
 
-import nltk
-nltk.download('wordnet')
-nltk.download('vader_lexicon')
 
 
 
