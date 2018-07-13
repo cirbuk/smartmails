@@ -5,7 +5,9 @@ import json
 import string
 #import sklearn
 
-
+import nltk
+nltk.download('wordnet')
+nltk.download('vader_lexicon')
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.externals import joblib
@@ -260,8 +262,6 @@ def modifysubjscore(text, score, wordcount):
 		score[0, 1] = 1
 		score[0, 0] = 0
 	return score
-
-
 
 
 if __name__ == '__main__':
