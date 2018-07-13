@@ -9,4 +9,4 @@ health_check:
   enable_health_check: False
 
 resources:
-  memory_gb: 1g
+  memory_gb: 1
