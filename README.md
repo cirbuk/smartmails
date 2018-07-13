@@ -13,4 +13,4 @@ Run below command:
 python3 -m spacy download en_core_web_sm
 
 # smartmails
-run "gunicorn -b :5000 main:app" in terminal to start the project after navigating to the myproject directory
+run "gunicorn -b :5000 smartmails:app" in terminal to start the project after navigating to the myproject directory
