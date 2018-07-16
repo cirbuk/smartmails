@@ -12,12 +12,15 @@
 .legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
 /* your colors */
 .legend .complex_words { background-color: #FFCBA4; }
-.legend .adverbs { background-color: #C3FDB8; }
-.legend .negative { background-color: #FFF380; }
-.legend .rude { background-color: #E0B0FF; }
-.legend .objective { background-color: #C6DEFF; }
-.legend .long { background-color: #D1D0CE; }
+.legend .rude { background-color: #F7DC6F; }
+.legend .long { background-color: #85C1E9; }
 
+.btn {
+  background-color: #3079ED
+}
+.btn:hover {
+  background-color: #3079ED
+}
 </style>
 
 </head>
@@ -25,33 +28,27 @@
 <div class="container" id='template'>
 <div class="container" id="review">
 
-<div class="container" style="width: 500px", id = "score">
+<div class="container" style="width: 500px">
+    <p id='overall_score'> Overall Score: 0</p>
 
-<h6> Overall Index </h6>
-
-<div class="progress">
-  <div class="progress-bar bg-warning" role="progressbar" style="width:50%" id="overall_index">
-    
-</div>
-</div>
 </div>
 
 
 <div class="container" style="width: 500px", id = "positivity">
-<h6> Positivity <button type="button" class="btn btn-info btn-xs float-right" id="pos_review">Click</button></h6>
+<h6> Positivity <button type="button" class="btn btn-info btn-xs float-right" id="pos_review" >Click</button></h6>
 <div class="alert alert-error collapse" role="alert" id="posalert">
   <span>
     <p id="posreview"></p>
   </span>
 </div>
 <div class="progress">
-  <div class="progress-bar bg-success" role="progressbar" style="width:33%" id="pos">
+  <div class="progress-bar bg-success" role="progressbar" style="width:0%" id="pos">
     Positive
   </div>
-  <div class="progress-bar bg-warning" role="progressbar" style="width:34%" id="neu">
+  <div class="progress-bar bg-warning" role="progressbar" style="width:0%" id="neu">
     Neutral
   </div>
-  <div class="progress-bar bg-danger" role="progressbar" style="width:33%" id="neg">
+  <div class="progress-bar bg-danger" role="progressbar" style="width:0%" id="neg">
     Negative
   </div>    
 </div>
@@ -65,15 +62,29 @@
   </span>
 </div>
 <div class="progress">
-  <div class="progress-bar bg-success" role="progressbar" style="width:50%" id="polite">
+  <div class="progress-bar bg-success" role="progressbar" style="width:0%" id="polite">
     Polite
   </div>
-  <div class="progress-bar bg-danger" role="progressbar" style="width:50%" id="rude">
+  <div class="progress-bar bg-danger" role="progressbar" style="width:0%" id="rude">
     Rude
   </div>
 </div>
 </div>
 
+<div class="container" style="width: 500px" id = "complexity">
+<h6> Complexity <button type="button" class="btn btn-info btn-xs float-right" id="pol_review">Click</button></h6>
+<div class="alert alert-error collapse" role="alert" id="polalert">
+  <span>
+    <p id="polreview"></p>
+  </span>
+</div>
+<div class="progress">
+  <div class="progress-bar bg-success" role="progressbar" style="width:0%" id="complex">
+    Complexity
+  </div>
+</div>
+</div>
+<!---
 <div class="container" style="width: 500px" id = "subjectivity">
 <h6> Subjectivity <button type="button" class="btn btn-info btn-xs float-right" id="subj_review">Click</button></h6>
 <div class="alert alert-error collapse" role="alert" id="subjalert">
@@ -90,6 +101,7 @@
   </div>
 </div>
 </div>
+--->
 
 <div class="container" style="width: 500px" id="tones">
 <h6> Tone <button type="button" class="btn btn-info btn-xs float-right" id="tone_review">Click</button></h6>
@@ -99,22 +111,22 @@
   </span>
 </div>
 <div class="progress">
-  <div class="progress-bar bg-success" role="progressbar" style="width:17%" id="joy">
+  <div class="progress-bar bg-success" role="progressbar" style="width:0%" id="joy">
     Joy
   </div>
-    <div class="progress-bar bg-info" role="progressbar" style="width:17%" id="love">
+    <div class="progress-bar bg-info" role="progressbar" style="width:0%" id="love">
     Love
   </div>
-  <div class="progress-bar" role="progressbar" style="width:16%" id="surprise">
+  <div class="progress-bar" role="progressbar" style="width:0%" id="surprise">
     Surprise
   </div>
-  <div class="progress-bar bg-secondary" style="width:16%" id="fear">
+  <div class="progress-bar bg-secondary" style="width:0%" id="fear">
     Fear
   </div>
-  <div class="progress-bar bg-warning" role="progressbar" style="width:17%" id="sadness">
+  <div class="progress-bar bg-warning" role="progressbar" style="width:0%" id="sadness">
     Sadness
   </div>
-  <div class="progress-bar bg-danger" role="progressbar" style="width:17%" id="anger">
+  <div class="progress-bar bg-danger" role="progressbar" style="width:0%" id="anger">
     Anger
   </div>
 
@@ -123,33 +135,26 @@
 </div>
 </div>
 <div class="container" style="width: 500px">
-    <p id='word_count'> WORD COUNT: 0</p>
+    <p id='word_count'> Length: 0</p>
 
-    <p id='question_count'> QUESTION COUNT: 0</p>
-
-    <p id='com_words'> COMPLICATED WORDS: 0</p>
-
-    <p id='adverbs_count'> ADVERBS COUNT: 0</p>
-
-    <p id='reading_level'> READING LEVEL: 0</p>
 </div>
 
 </div>
 <div class="container" style="width: 500px" id = "improvements_legend">
-   <h6>This is Read Only, all changes made will be lost. To revert to editing click on the Improvements button again.<br>These suggestions are calculated using machine learning, if you feel these changes are unnecessary, stick to your insticts.</h6>
+   <h6>To edit the email, press the suggestions button again.</h6>
 
    <ul class="legend" id = "legend_list">
-    <li><span class="complex_words"></span>Complex Words</li><br>
-    <li><span class="adverbs"></span>Adverbs</li><br>
-    <li><span class="negative"></span>Negative</li><br>
-    <li><span class="rude"></span>Rude</li><br>
-    <li><span class="objective"></span>Objective</li><br>
+
+    <li><span class="complex_words"></span>Complex Words</li>
+
+    <li><span class="rude"></span>Rude</li>
+
     <li><span class="long"></span>Long</li>
 </ul>
 </div>
 
 <div class="container" style="width: 500px" id="improve_button">
-   <button type="button" class="btn btn-info btn-xs float-center" id="corrections">Improvements</button>
+   <button type="button" class="btn btn-info btn-xs float-center" id="corrections">Suggestions</button>
 </div>
 </div>
 </body>

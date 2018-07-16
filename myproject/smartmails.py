@@ -41,27 +41,27 @@ wordslist = []
 classlist = []
 
 def getwordslist():
-	file = open("subjwords.txt", "r")
-	listwords = file.readlines()
-	words = []
-	classification = []
-	for item in listwords:
-		#print(item[5])
-		if item[5] == "s":
-			classification.append(item[5:15])
-		if item[5] == "w":
-			classification.append(item[5:13])
-		items = item.split()
-		words.append(items[2][6:])
-	return words, classification
+    file = open("subjwords.txt", "r")
+    listwords = file.readlines()
+    words = []
+    classification = []
+    for item in listwords:
+        #print(item[5])
+        if item[5] == "s":
+            classification.append(item[5:15])
+        if item[5] == "w":
+            classification.append(item[5:13])
+        items = item.split()
+        words.append(items[2][6:])
+    return words, classification
 
 def buildhashtable(wordlist, classlist):
-	dic = {}
-	i = 0
-	for word in wordlist:
-		dic[word] = classlist[i]
-		i += 1
-	return dic
+    dic = {}
+    i = 0
+    for word in wordlist:
+        dic[word] = classlist[i]
+        i += 1
+    return dic
 
 
 
@@ -71,308 +71,312 @@ dic = buildhashtable(wordslist, classlist)
 
 @app.route('/<string:page_name>/')
 def render_static(page_name):
-	return render_template('%s.html' % page_name)
+    return render_template('%s.html' % page_name)
 
 
 
 @app.route('/postmethod', methods = ['POST'])
 def get_post_email_data():
-	jsdata = request.form['data']
-	#content=json.loads(jsdata)[0]
-	#useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
-	
-	noisefreedata = removenoise(jsdata)
-	adv_length = 0
-	advs_list = []
-	exceptions = ["why"]
-	doc = nlp(noisefreedata)
-	for token in doc:
-		text = token.text
-		if token.pos_ == "ADV" and text[len(text) - 1:] == "y" and token.text not in exceptions:
-			adv_length += 1
-			advs_list.append(str(token.text))
+    jsdata = request.form['data']
+    #content=json.loads(jsdata)[0]
+    #useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
+    
+    noisefreedata = removenoise(jsdata)
+    adv_length = 0
+    advs_list = []
+    exceptions = ["why"]
+    doc = nlp(noisefreedata)
+    for token in doc:
+        text = token.text
+        if token.pos_ == "ADV" and text[len(text) - 1:] == "y" and token.text not in exceptions:
+            adv_length += 1
+            advs_list.append(str(token.text))
 
-	word_count_length = word_count(noisefreedata)
-	tokens = nltk.tokenize.TreebankWordTokenizer()
-	tokenlist = tokens.tokenize(noisefreedata)
-	resList = lemmatizeText(tokenlist)
+    word_count_length = word_count(noisefreedata)
+    tokens = nltk.tokenize.TreebankWordTokenizer()
+    tokenlist = tokens.tokenize(noisefreedata)
+    resList = lemmatizeText(tokenlist)
 
-	if resList==[]:
-		return json.dumps({})
-	print(resList)
-	print('Called function')
-	sentences= createSentenceList(noisefreedata)
-	print(sentences)
-
-
-	question_count_length = question_count(resList)
-	processedData=getPunctFreeString(resList)
-
-	#print(processedData)
+    if resList==[]:
+        return json.dumps({})
+    print(resList)
+    print('Called function')
+    sentences= createSentenceList(noisefreedata)
+    print(sentences)
 
 
+    question_count_length = question_count(resList)
+    processedData=getPunctFreeString(resList)
 
-	sid=SentimentIntensityAnalyzer()
-	scores=sid.polarity_scores(processedData)
-	obj_res,obj_score=obj_clf.predict(tf.transform([processedData])),obj_clf.predict_proba(tf.transform([processedData]))
-	tone_res,tone_score=tone_clf.predict(tf_tone.transform([processedData])),tone_clf.predict_proba(tf_tone.transform([processedData]))
-	polite_res, polite_score=polite_clf.predict(tf_polite.transform([processedData])), polite_clf.predict_proba(tf_polite.transform([processedData]))
-	print(obj_score)
-	obj_score_modified = modifysubjscore(processedData, obj_score, word_count_length)
-	print(obj_score_modified)
-
-	sentenceScores=getSentenceScores(sentences)
-	sentence_count = len(sentences)
-	errors = getBadSentences(sentenceScores, sentences)
-	print("Printing scores")
-	i=0
-	for item in sentenceScores:
-		#print(item,sentences[i])
-		i+=1
-
-	#print(subj_res[0])
-	#print(subj_score)
-	#print(tone_res[0])
-	#print(polite_res[0])
-	#print(polite_score)
-	#print(tone_score)
-	#doc1=nlp1(processedData.decode('utf-8'))
-	complex_words_length, syllable_count, complexwordslist = getComplexWords(resList)
-	reading_grade = ''
-
-	#based on this: https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests
-	if (sentence_count == 0 or word_count_length == 0):
-		reading_level = "Not Available"
-	else:
-		#cast as float for python 2
-		reading_level = 0.39 * (word_count_length / sentence_count) + 11.8 * (syllable_count / word_count_length) - 15.59
-		if reading_level < 0:
-			reading_level = 0
-	print(advs_list)
+    #print(processedData)
 
 
-	scores['word_count']=word_count_length
-	scores['sentence_count'] = sentence_count
-	scores['syllable_count'] = syllable_count
-	scores['question_count']=question_count_length
-	scores['complex_words']=complex_words_length
-	scores['adverbs_count'] = adv_length
-	scores['politeness']={'polite':round(polite_score[0, 0], 4), "rude": round(polite_score[0, 1], 4)}
-	scores['subjectivity']=round(obj_score_modified[0,1],4)
-	scores['objectivity']=round(obj_score_modified[0,0],4)
-	scores['tone']={'anger':round(tone_score[0,0],4),'fear':round(tone_score[0,1],4),'joy':round(tone_score[0,2],4),'love':round(tone_score[0,3],4),'sadness':round(tone_score[0,4],4),'surprise':round(tone_score[0,5],4)}
-	scores['errors']=errors
-	scores['complex_list'] = complexwordslist
-	scores['adverbs_list'] = advs_list
-	scores['reading_level'] = reading_level
+
+    sid=SentimentIntensityAnalyzer()
+    scores=sid.polarity_scores(processedData)
+    obj_res,obj_score=obj_clf.predict(tf.transform([processedData])),obj_clf.predict_proba(tf.transform([processedData]))
+    tone_res,tone_score=tone_clf.predict(tf_tone.transform([processedData])),tone_clf.predict_proba(tf_tone.transform([processedData]))
+    polite_res, polite_score=polite_clf.predict(tf_polite.transform([processedData])), polite_clf.predict_proba(tf_polite.transform([processedData]))
+    print(obj_score)
+    obj_score_modified = modifysubjscore(processedData, obj_score, word_count_length)
+    print(obj_score_modified)
+
+    sentenceScores=getSentenceScores(sentences)
+    sentence_count = len(sentences)
+    errors = getBadSentences(sentenceScores, sentences)
+    print("Printing scores")
+    i=0
+    for item in sentenceScores:
+        #print(item,sentences[i])
+        i+=1
+
+    #print(subj_res[0])
+    #print(subj_score)
+    #print(tone_res[0])
+    #print(polite_res[0])
+    #print(polite_score)
+    #print(tone_score)
+    #doc1=nlp1(processedData.decode('utf-8'))
+    complex_words_length, syllable_count, complexwordslist = getComplexWords(resList)
+
+    #based on this: https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests
+    if (sentence_count == 0 or word_count_length == 0):
+        reading_level = "Not Available"
+    else:
+        #cast as float for python 2
+        reading_level = 100 - (206.835 - 1.015*(word_count_length/sentence_count)-84.6*(syllable_count/word_count_length))
+        if reading_level > 100:
+            reading_level = 100
+        if reading_level < 0:
+            reading_level = 0
 
 
-	overall_score = getOverallScore(scores)
-	scores['overall_index'] = overall_score
-	print(scores)
-	#sentiment = classifier.classify(build_bag_of_words(resList))
-	#print(sentiment)
-	return json.dumps(scores)
+    scores['word_count']=word_count_length
+    scores['sentence_count'] = sentence_count
+    scores['syllable_count'] = syllable_count
+    scores['question_count']=question_count_length
+    scores['complex_words']=complex_words_length
+    scores['adverbs_count'] = adv_length
+    scores['politeness']={'polite':round(polite_score[0, 0], 4), "rude": round(polite_score[0, 1], 4)}
+    scores['subjectivity']=round(obj_score_modified[0,1],4)
+    scores['objectivity']=round(obj_score_modified[0,0],4)
+    scores['tone']={'anger':round(tone_score[0,0],4),'fear':round(tone_score[0,1],4),'joy':round(tone_score[0,2],4),'love':round(tone_score[0,3],4),'sadness':round(tone_score[0,4],4),'surprise':round(tone_score[0,5],4)}
+    scores['errors']=errors
+    scores['complex_list'] = complexwordslist
+    scores['adverbs_list'] = advs_list
+    scores['complexity'] = reading_level
+
+
+    overall_score = getOverallScore(scores)
+    scores['overall_score'] = overall_score
+    print(scores)
+    #sentiment = classifier.classify(build_bag_of_words(resList))
+    #print(sentiment)
+    return json.dumps(scores)
 
 
 
 def removenoise(input):
-	l=input.split()
-	res=[]
-	for string in l:
-		res+=string.split('<')
-	res1=[]
-	for string in res:
-		res1+=string.split('>')
-	res2=[]
-	for string in res1:
-		res2+=string.split('&')
-	noise=['div','/div','br','nbsp;', 'mark', '/mark', 'style="background-color:#FFCBA4;"', 'style="background-color:#C3FDB8;"']
-	result=[x for x in res2 if x not in noise and x]
-	finalstr=''
-	for string in result:
-		finalstr+=string+' '
-	finalstr = finalstr[:len(finalstr) - 1]
-	return finalstr
+    l=input.split()
+    res=[]
+    for string in l:
+        res+=string.split('<')
+    res1=[]
+    for string in res:
+        res1+=string.split('>')
+    res2=[]
+    for string in res1:
+        res2+=string.split('&')
+    noise=['div','/div','br','nbsp;', 'mark', '/mark', 'style="background-color:#FFCBA4;"', 'style="background-color:#C3FDB8;"']
+    result=[x for x in res2 if x not in noise and x]
+    finalstr=''
+    for string in result:
+        finalstr+=string+' '
+    finalstr = finalstr[:len(finalstr) - 1]
+    return finalstr
 
 def lemmatizeText(tokenlist):
-	stemmer=nltk.stem.WordNetLemmatizer()
-	for token in tokenlist:
-		token = stemmer.lemmatize(token)
-	return tokenlist
+    stemmer=nltk.stem.WordNetLemmatizer()
+    for token in tokenlist:
+        token = stemmer.lemmatize(token)
+    return tokenlist
 
 def word_count(str_text):
-	text = str_text.split()
-	length = 0
-	punctuation = ['.', '!', '?', ',', ';', ':', '"', '-', '_', '+', '=', '&', '<', '>']
-	punctuation2 = ["'"]
-	for token in text:
-		if token not in punctuation and token not in punctuation2:
-			length += 1
-			print(token)
-			print(length)
-	return length   
+    text = str_text.split()
+    length = 0
+    punctuation = ['.', '!', '?', ',', ';', ':', '"', '-', '_', '+', '=', '&', '<', '>']
+    punctuation2 = ["'"]
+    for token in text:
+        if token not in punctuation and token not in punctuation2:
+            length += 1
+            print(token)
+            print(length)
+    return length   
 
 def question_count(tokens):
-	i = 0
-	count = 0
-	while i < len(tokens):
-		if tokens[i] == "?":
-			i += 1
-			count += 1
-			while i < len(tokens) and tokens[i] == "?":
-				i += 1
-		else:
-			i += 1
-	return count
+    i = 0
+    count = 0
+    while i < len(tokens):
+        if tokens[i] == "?":
+            i += 1
+            count += 1
+            while i < len(tokens) and tokens[i] == "?":
+                i += 1
+        else:
+            i += 1
+    return count
 
 def createSentenceList(text):
-	sentences=[]
-	currSentence=''
-	punct=['.','!','?']
-	i=0
-	print("here it is")
-	print(text[len(text)-1])
-	if text[len(text) - 1] not in punct:
-		text+= "."
-		print("added punctuation")
-		print(text)
-	while i<len(text):
+    sentences=[]
+    currSentence=''
+    punct=['.','!','?']
+    i=0
+    print("here it is")
+    print(text[len(text)-1])
+    if text[len(text) - 1] not in punct:
+        text+= "."
+        print("added punctuation")
+        print(text)
+    while i<len(text):
 
-		if text[i] not in punct:
-			currSentence+=text[i]
-			i+=1
-		else:
-			sentences.append(currSentence + text[i])
-			i+=1
-			while i<len(text) and text[i] in punct:
-				i+=1
-			currSentence=''
+        if text[i] not in punct:
+            currSentence+=text[i]
+            i+=1
+        else:
+            sentences.append(currSentence + text[i])
+            i+=1
+            while i<len(text) and text[i] in punct:
+                i+=1
+            currSentence=''
 
-	return sentences
+    return sentences
 
 def getSentenceScores(sentences):
-	sid=SentimentIntensityAnalyzer()
-	sentenceScores=[]
-	for sentence in sentences:
-		sentence_length=word_count(sentence)
-		complex_words, syl, complexwordslist=getComplexWords(sentence.split())
-		scores=sid.polarity_scores(sentence)
-		obj_res,obj_score=obj_clf.predict(tf.transform([sentence])),obj_clf.predict_proba(tf.transform([sentence]))
-		tone_res,tone_score=tone_clf.predict(tf_tone.transform([sentence])),tone_clf.predict_proba(tf_tone.transform([sentence]))
-		polite_res, polite_score=polite_clf.predict(tf_polite.transform([sentence])), polite_clf.predict_proba(tf_polite.transform([sentence]))
-		obj_score_modified = modifysubjscore(sentence, obj_score,sentence_length)
-		scores['word_count']=sentence_length
-		scores['complex_words']=complex_words
-		scores['politeness']={'polite':round(polite_score[0, 0], 4), "rude": round(polite_score[0, 1], 4)}
-		scores['subjectivity']=round(obj_score_modified[0,1],4)
-		scores['objectivity']=round(obj_score_modified[0,0],4)
-		scores['tone']={'anger':round(tone_score[0,0],4),'fear':round(tone_score[0,1],4),'joy':round(tone_score[0,2],4),'love':round(tone_score[0,3],4),'sadness':round(tone_score[0,4],4),'surprise':round(tone_score[0,5],4)}
-		sentenceScores.append(scores)
-	return sentenceScores
+    sid=SentimentIntensityAnalyzer()
+    sentenceScores=[]
+    for sentence in sentences:
+        sentence_length=word_count(sentence)
+        complex_words, syl, complexwordslist=getComplexWords(sentence.split())
+        scores=sid.polarity_scores(sentence)
+        obj_res,obj_score=obj_clf.predict(tf.transform([sentence])),obj_clf.predict_proba(tf.transform([sentence]))
+        tone_res,tone_score=tone_clf.predict(tf_tone.transform([sentence])),tone_clf.predict_proba(tf_tone.transform([sentence]))
+        polite_res, polite_score=polite_clf.predict(tf_polite.transform([sentence])), polite_clf.predict_proba(tf_polite.transform([sentence]))
+        obj_score_modified = modifysubjscore(sentence, obj_score,sentence_length)
+        scores['word_count']=sentence_length
+        scores['complex_words']=complex_words
+        scores['politeness']={'polite':round(polite_score[0, 0], 4), "rude": round(polite_score[0, 1], 4)}
+        scores['subjectivity']=round(obj_score_modified[0,1],4)
+        scores['objectivity']=round(obj_score_modified[0,0],4)
+        scores['tone']={'anger':round(tone_score[0,0],4),'fear':round(tone_score[0,1],4),'joy':round(tone_score[0,2],4),'love':round(tone_score[0,3],4),'sadness':round(tone_score[0,4],4),'surprise':round(tone_score[0,5],4)}
+        sentenceScores.append(scores)
+    return sentenceScores
 
 def getBadSentences(sentenceScores, sentences):
-	result = []
-	i = 0
-	while i < len(sentenceScores):
-		errors = ""
+    result = []
+    i = 0
+    while i < len(sentenceScores):
+        errors = ""
+        if sentenceScores[i]["politeness"]["rude"] > 0.7:
+            errors += "rude"
+        elif sentenceScores[i]["neg"] > 0.7:
+            errors += "negative"
+        elif sentenceScores[i]['word_count'] > 25:
+            errors += "length"
 
-		if sentenceScores[i]["neg"] > 0.6:
-			errors += "negative"
-		elif sentenceScores[i]["politeness"]["rude"] > 0.65:
-			errors += "rude"
-		elif sentenceScores[i]["objectivity"] > 0.6:
-			errors += "objective"
-		elif sentenceScores[i]['word_count'] > 15:
-			errors += "length"
+        result.append([errors, sentences[i][-1], sentences[i].split()[0]])
+        i += 1
 
-		result.append([errors, sentences[i][-1], sentences[i].split()[0]])
-		i += 1
-
-	return result
+    return result
 
 def getPunctFreeString(list):
-	str1=''
-	for word in list:
-		if word not in string.punctuation:
-			str1+=word+' '
-	str1=str1[:len(str1)-1]
-	return str1
+    str1=''
+    for word in list:
+        if word not in string.punctuation:
+            str1+=word+' '
+    str1=str1[:len(str1)-1]
+    return str1
 
 def getComplexWords(text):
-	ncomplex=0
-	ntotal = 0
-	complexlist = []
-	exceptions = ["terrible", "horrible", "laughable", "countable", "probable", "constable", "capable", "audible", "visible", "breakable", "flexible", "plausible", "tangible", "feasible", "palpable", "flammable", "unstable", "winnable", "losable", "mashable", "flappable"]
-	for word in text:
-		#word.__str__()
-		syllables = 0
-		for i in range(len(word)):
-			if i == 0 and word[i] in "aeiouy" :
-				syllables = syllables + 1
-			elif word[i - 1] not in "aeiouy" :
-				if i < len(word) - 1 and word[i] in "aeiouy" :
-					syllables = syllables + 1
-				elif i == len(word) - 1 and word[i] in "aiouy" :
-					syllables = syllables + 1
-		if len(word) > 0 and syllables == 0 :
-			syllables = 1
-		if syllables>=3 or word in exceptions:
-			ncomplex=ncomplex+1
-			complexlist.append(word)
-		ntotal += syllables
-	return ncomplex, ntotal, complexlist
+    ncomplex=0
+    ntotal = 0
+    complexlist = []
+    exceptions = ["terrible", "horrible", "laughable", "countable", "probable", "constable", "capable", "audible", "visible", "breakable", "flexible", "plausible", "tangible", "feasible", "palpable", "flammable", "unstable", "winnable", "losable", "mashable", "flappable", "effable", "bendable"]
+    for word in text:
+        #word.__str__()
+        syllables = 0
+        for i in range(len(word)):
+            if i == 0 and word[i] in "aeiouy" :
+                syllables = syllables + 1
+            elif word[i - 1] not in "aeiouy" :
+                if i < len(word) - 1 and word[i] in "aeiouy" :
+                    syllables = syllables + 1
+                elif i == len(word) - 1 and word[i] in "aiouy" :
+                    syllables = syllables + 1
+        if len(word) > 0 and syllables == 0 :
+            syllables = 1
+        if syllables>=3 or word in exceptions:
+            ncomplex=ncomplex+1
+            complexlist.append(word)
+        ntotal += syllables
+    return ncomplex, ntotal, complexlist
 
 
 
 
 def modifysubjscore(text, score, wordcount):
-	subjlen = 0
-	objlen = 0
-	#print(dic)
-	#print(text)
-	words = []
-	words = text.split()
-	for word in words:
-		if dic.get(word) == "strongsubj":
-			subjlen += 1
-		if dic.get(word) == "weaksubj":
-			objlen += 1
-	subj_ratio = float(subjlen) / wordcount
-	obj_ratio = float(objlen) / wordcount
-	subj_diff = abs(subj_ratio - obj_ratio)
-	if subj_ratio > obj_ratio:
-		score[0, 1] += subj_diff
-		score[0, 0] -= subj_diff
-	else:
-		score[0, 0] += subj_diff
-		score[0, 1] -= subj_diff
+    subjlen = 0
+    objlen = 0
+    #print(dic)
+    #print(text)
+    words = []
+    words = text.split()
+    for word in words:
+        if dic.get(word) == "strongsubj":
+            subjlen += 1
+        if dic.get(word) == "weaksubj":
+            objlen += 1
+    subj_ratio = float(subjlen) / wordcount
+    obj_ratio = float(objlen) / wordcount
+    subj_diff = abs(subj_ratio - obj_ratio)
+    if subj_ratio > obj_ratio:
+        score[0, 1] += subj_diff
+        score[0, 0] -= subj_diff
+    else:
+        score[0, 0] += subj_diff
+        score[0, 1] -= subj_diff
 
-	if score[0,0] > 1:
-		score[0, 0] = 1
-		score[0, 1] = 0
-	if score[0, 1] > 1:
-		score[0, 1] = 1
-		score[0, 0] = 0
-	return score
+    if score[0,0] > 1:
+        score[0, 0] = 1
+        score[0, 1] = 0
+    if score[0, 1] > 1:
+        score[0, 1] = 1
+        score[0, 0] = 0
+    return score
 
 
 def getOverallScore(scores):
-	total_score = 0
-	if scores["neg"] < 0.5:
-		total_score += (scores["pos"] + scores["neg"])*0.25 
-	else:
-		total_score += scores["pos"] * 0.25
-	total_score += scores["politeness"]["polite"]*0.25
-	if scores["objectivity"] < 0.6:
-		total_score += max(scores["objectivity"], scores["subjectivity"]) * 0.25
-	else:
-		total_score += scores["subjectivity"]*0.25
+    total_score = 0
 
+    love_score = max(scores["tone"]["love"] - 0.15, 0);
+    joy_score = max(scores["tone"]["joy"] - 0.15, 0);
+    surprise_score = max(scores["tone"]["surprise"] - 0.15, 0);
+    fear_score = max(scores["tone"]["fear"] - 0.15, 0);
+    anger_score = max(scores["tone"]["anger"] - 0.15, 0);
+    sadness_score = max(scores["tone"]["sadness"] - 0.15, 0);
 
-	total_score += (scores["tone"]["love"] + scores["tone"]["joy"] + scores["tone"]["surprise"])*0.25
-	return total_score
+    tone_score = love_score + joy_score + surprise_score + fear_score + anger_score + sadness_score;
+    print(total_score)
+    total_score += scores["politeness"]["polite"]*0.33
+    print(total_score)
+
+    total_score += ((love_score/tone_score) + (joy_score/tone_score) + (surprise_score/tone_score))*0.34
+    print(total_score)
+
+    total_score += (1 - ((max(scores["complexity"] - 50, 0))/50))*0.33    
+    print(total_score)
+
+    return round(total_score * 100)
 
 
 if __name__ == '__main__':
-	app.run(debug = True)
+    app.run(debug = True)
