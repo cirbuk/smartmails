@@ -370,16 +370,17 @@ def getOverallScore(scores):
     score_tone = ((love_score/tone_score) + (joy_score/tone_score) + (surprise_score/tone_score))*100
 
     score_complexity = (100 - ((max(scores["complexity"] - 50, 0))))
-    print(score_polite, score_tone, score_complexity)
+    total_score = score_polite + score_tone + score_complexity
+    return round(total_score)
 
+'''
     if max(score_polite, score_tone, score_complexity) == score_polite:
         total_score = (score_tone + score_complexity) / 2
     if max(score_polite, score_tone, score_complexity) == score_tone:
         total_score = (score_polite + score_complexity) / 2
     if max(score_polite, score_tone, score_complexity) == score_complexity:
         total_score = (score_tone + score_polite) / 2
-
-    return round(total_score)
+'''
 
 
 if __name__ == '__main__':
