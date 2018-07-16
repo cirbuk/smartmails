@@ -365,17 +365,21 @@ def getOverallScore(scores):
     sadness_score = max(scores["tone"]["sadness"] - 0.15, 0);
 
     tone_score = love_score + joy_score + surprise_score + fear_score + anger_score + sadness_score;
-    print(total_score)
-    total_score += scores["politeness"]["polite"]*0.33
-    print(total_score)
+    score_polite = scores["politeness"]["polite"]*100
 
-    total_score += ((love_score/tone_score) + (joy_score/tone_score) + (surprise_score/tone_score))*0.34
-    print(total_score)
+    score_tone = ((love_score/tone_score) + (joy_score/tone_score) + (surprise_score/tone_score))*100
 
-    total_score += (1 - ((max(scores["complexity"] - 50, 0))/50))*0.33    
-    print(total_score)
+    score_complexity = (100 - ((max(scores["complexity"] - 50, 0))))
+    print(score_polite, score_tone, score_complexity)
 
-    return round(total_score * 100)
+    if max(score_polite, score_tone, score_complexity) == score_polite:
+        total_score = (score_tone + score_complexity) / 2
+    if max(score_polite, score_tone, score_complexity) == score_tone:
+        total_score = (score_polite + score_complexity) / 2
+    if max(score_polite, score_tone, score_complexity) == score_complexity:
+        total_score = (score_tone + score_polite) / 2
+
+    return round(total_score)
 
 
 if __name__ == '__main__':
