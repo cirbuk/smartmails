@@ -15,11 +15,31 @@
 .legend .rude { background-color: #F7DC6F; }
 .legend .long { background-color: #85C1E9; }
 
-.btn {
-  background-color: #3079ED
+
+.btn-custom {
+  background-color: #FFFFFF;
+  color: #000000;
+  border-color: #FFFFFF;
+
 }
-.btn:hover {
-  background-color: #3079ED
+.btn-custom:hover {
+  background-color: #FFFFFF;
+  color: #000000;
+  border-color: #FFFFFF;
+}
+.btn-custom:active,  {
+  background-color: #FFFFFF;
+  color: #000000;
+  border-color: #FFFFFF;
+  outline: none;
+  box-shadow: none;
+}
+.btn-custom:focus {
+  background-color: #FFFFFF;
+  color: #000000;
+  border-color: #FFFFFF;
+  outline: none;
+  box-shadow: none;
 }
 </style>
 
@@ -55,8 +75,8 @@
 </div>
 --->
 
-<div class="container" style="width: 100px" id = "politeness">
-<h6> Politeness <button type="button" class="btn btn-info btn-xs float-right" id="pol_review" background-color="transparent">?</button></h6>
+<div class="container" style="width: 500px" id = "politeness">
+<h6> Politeness <button type="button" class="btn btn-custom btn-xs float-right" id="pol_review" >?</button></h6>
 <div class="alert alert-error collapse" role="alert" id="polalert">
   <span>
     <p id="polreview"></p>
@@ -72,8 +92,8 @@
 </div>
 </div>
 
-<div class="container" style="width: 100px" id = "complexity">
-<h6> Complexity <button type="button" class="btn btn-info btn-xs float-right" id="pol_review" background-color="transparent">?</button></h6>
+<div class="container" style="width: 500px" id = "complexity">
+<h6> Complexity <button type="button" class="btn btn-custom btn-xs float-right" id="pol_review" >?</button></h6>
 <div class="alert alert-error collapse" role="alert" id="polalert">
   <span>
     <p id="polreview"></p>
@@ -104,8 +124,8 @@
 </div>
 --->
 
-<div class="container" style="width: 100px" id="tones">
-<h6> Tone <button type="button" class="btn btn-info btn-xs float-right" id="tone_review" background-color="transparent">?</button></h6>
+<div class="container" style="width: 500px" id="tones">
+<h6> Tone <button type="button" class="btn btn-custom btn-xs float-right" id="tone_review" >?</button></h6>
 <div class="alert alert-error collapse" role="alert" id="tonealert">
   <span>
     <p id="tonereview"></p>
@@ -155,7 +175,7 @@
 </div>
 
 <div class="container" style="width: 500px" id="improve_button">
-   <button type="button" class="btn btn-info btn-xs float-center" id="corrections">Suggestions</button>
+   <button type="button" class="btn btn-primary btn-xs float-center" id="corrections">Suggestions</button>
 </div>
 </div>
 </body>

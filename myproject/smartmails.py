@@ -357,12 +357,12 @@ def modifysubjscore(text, score, wordcount):
 def getOverallScore(scores):
     total_score = 0
 
-    love_score = max(scores["tone"]["love"] - 0.15, 0);
-    joy_score = max(scores["tone"]["joy"] - 0.15, 0);
-    surprise_score = max(scores["tone"]["surprise"] - 0.15, 0);
-    fear_score = max(scores["tone"]["fear"] - 0.15, 0);
-    anger_score = max(scores["tone"]["anger"] - 0.15, 0);
-    sadness_score = max(scores["tone"]["sadness"] - 0.15, 0);
+    love_score = max(scores["tone"]["love"] - 0.175, 0);
+    joy_score = max(scores["tone"]["joy"] - 0.175, 0);
+    surprise_score = max(scores["tone"]["surprise"] - 0.175, 0);
+    fear_score = max(scores["tone"]["fear"] - 0.175, 0);
+    anger_score = max(scores["tone"]["anger"] - 0.175, 0);
+    sadness_score = max(scores["tone"]["sadness"] - 0.175, 0);
 
     tone_score = love_score + joy_score + surprise_score + fear_score + anger_score + sadness_score;
     score_polite = scores["politeness"]["polite"]*100
