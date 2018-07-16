@@ -93,7 +93,7 @@ def trainSVClassifier():
 	X_test=matrix[split:]
 	y_test=data_labels[split:]
 	print('Started training	')
-	clf_svm=SGDClassifier(loss='modified_huber', penalty='l2',alpha=1e-3,max_iter=50,tol=None,random_state=42, bias_used=False)
+	clf_svm=SGDClassifier(loss='modified_huber', penalty='l2',alpha=1e-3,max_iter=50,tol=None,random_state=42)
 	clf_svm = clf_svm.fit(X=X_train, y=y_train)
 	predict=clf_svm.predict(X_test)
 	print(len(predict))
