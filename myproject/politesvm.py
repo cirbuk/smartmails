@@ -7,6 +7,7 @@ from sklearn.linear_model import SGDClassifier
 tf=TfidfVectorizer(analyzer='word')
 
 def vectorizer(data):
+    data = [str(i) for i in data]
     tfidf_matrix=tf.fit_transform(data)
     pickle.dump(tf,open('training_models/politeness/vectorizer.joblib.pkl',"wb"), protocol=2)
     print('vectorizer saved')
@@ -38,9 +39,6 @@ def trainSVClassifier():
     y_test=data_labels[split:]
     clf_svm=SGDClassifier(loss='modified_huber', penalty='l2',alpha=1e-3,max_iter=50,tol=None,random_state=42)
     clf_svm = clf_svm.fit(X=X_train, y=y_train)
-    predict=clf_svm.predict(X_test)
-    print(len(predict))
-    print(accuracy_score(y_test,predict))
     print("Trained SV classifier")
     pickle.dump(clf_svm,open('training_models/politeness/classifier.joblib.pkl',"wb"), protocol=2)
 
