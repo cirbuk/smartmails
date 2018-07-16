@@ -370,7 +370,9 @@ def getOverallScore(scores):
     score_tone = ((love_score/tone_score) + (joy_score/tone_score) + (surprise_score/tone_score))*100
 
     score_complexity = (100 - ((max(scores["complexity"] - 50, 0))))
-    total_score = score_polite + score_tone + score_complexity
+
+    print(score_polite, score_tone, score_complexity)
+    total_score = score_polite*0.4 + score_tone*0.4 + score_complexity*0.2
     return round(total_score)
 
 '''

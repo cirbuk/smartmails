@@ -17,7 +17,7 @@ def vectorizer(data):
 def trainSVClassifier():
     data = []
     data_labels = []
-    df1 = pd.read_csv("newdata.csv", usecols = ["Request", "Classification"])
+    df1 = pd.read_csv("politenessdata.csv", usecols = ["Request", "Classification"])
     docs1 = []
     i = 0
 
