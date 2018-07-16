@@ -29,7 +29,7 @@ def trainSVClassifier():
 			data.append(i)
 			data_labels.append('obj')
 '''
-	niters=15000
+	niters=100
 
 	with open("./tone_data/anger/anger") as f:
 		j=0
@@ -95,9 +95,6 @@ def trainSVClassifier():
 	print('Started training	')
 	clf_svm=SGDClassifier(loss='modified_huber', penalty='l2',alpha=1e-3,max_iter=50,tol=None,random_state=42)
 	clf_svm = clf_svm.fit(X=X_train, y=y_train)
-	predict=clf_svm.predict(X_test)
-	print(len(predict))
-	print(accuracy_score(y_test,predict))
 	print("Trained SV classifier")
 	pickle.dump(clf_svm,open('training_models/tone/tone_clf.joblib.pkl',"wb"),protocol=2)
 trainSVClassifier()
