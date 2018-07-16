@@ -30,11 +30,12 @@ def trainSVClassifier():
         print(i)
         i = i + 1
 
+    split = int(len(data))
     matrix=vectorizer(data)
-    X_train=matrix[:1624]
-    y_train=data_labels[:1624]
-    X_test=matrix[1624:]
-    y_test=data_labels[1624:]
+    X_train=matrix[:split]
+    y_train=data_labels[:split]
+    X_test=matrix[split:]
+    y_test=data_labels[split:]
     clf_svm=SGDClassifier(loss='modified_huber', penalty='l2',alpha=1e-3,max_iter=50,tol=None,random_state=42)
     clf_svm = clf_svm.fit(X=X_train, y=y_train)
     predict=clf_svm.predict(X_test)
