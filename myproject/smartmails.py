@@ -27,16 +27,15 @@ CORS(app)
 #nlp1=spacy.load("tone_model")
 
 #remove encoding = "latin1" for python 2
-obj_clf=pickle.load(open('training_models/subjectivity/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
+#obj_clf=pickle.load(open('training_models/subjectivity/subj_clf.joblib.pkl',"rb"), encoding = "latin1")
 tone_clf=pickle.load(open('training_models/tone/tone_clf.joblib.pkl',"rb"), encoding = "latin1")
 polite_clf=pickle.load(open('training_models/politeness/classifier.joblib.pkl',"rb"), encoding = "latin1")
-print('Loaded SV classifier')
+#print('Loaded SV classifier')
 
-tf=pickle.load(open('training_models/subjectivity/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
+#tf=pickle.load(open('training_models/subjectivity/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
 tf_tone=pickle.load(open('training_models/tone/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
 tf_polite=pickle.load(open('training_models/politeness/vectorizer.joblib.pkl', "rb"), encoding = "latin1")
-
-print('vectorizer loaded')
+#print('vectorizer loaded')
 wordslist = []
 classlist = []
 
@@ -99,10 +98,10 @@ def get_post_email_data():
 
     if resList==[]:
         return json.dumps({})
-    print(resList)
-    print('Called function')
+    #print(resList)
+    #print('Called function')
     sentences= createSentenceList(noisefreedata)
-    print(sentences)
+    #print(sentences)
 
 
     question_count_length = question_count(resList)
@@ -114,17 +113,17 @@ def get_post_email_data():
 
     sid=SentimentIntensityAnalyzer()
     scores=sid.polarity_scores(processedData)
-    obj_res,obj_score=obj_clf.predict(tf.transform([processedData])),obj_clf.predict_proba(tf.transform([processedData]))
+    #obj_res,obj_score=obj_clf.predict(tf.transform([processedData])),obj_clf.predict_proba(tf.transform([processedData]))
     tone_res,tone_score=tone_clf.predict(tf_tone.transform([processedData])),tone_clf.predict_proba(tf_tone.transform([processedData]))
     polite_res, polite_score=polite_clf.predict(tf_polite.transform([processedData])), polite_clf.predict_proba(tf_polite.transform([processedData]))
-    print(obj_score)
-    obj_score_modified = modifysubjscore(processedData, obj_score, word_count_length)
-    print(obj_score_modified)
+    #print(obj_score)
+    #obj_score_modified = modifysubjscore(processedData, obj_score, word_count_length)
+    #print(obj_score_modified)
 
     sentenceScores=getSentenceScores(sentences)
     sentence_count = len(sentences)
     errors = getBadSentences(sentenceScores, sentences)
-    print("Printing scores")
+    #print("Printing scores")
     i=0
     for item in sentenceScores:
         #print(item,sentences[i])
@@ -154,22 +153,22 @@ def get_post_email_data():
     scores['word_count']=word_count_length
     scores['sentence_count'] = sentence_count
     scores['syllable_count'] = syllable_count
-    scores['question_count']=question_count_length
+    #scores['question_count']=question_count_length
     scores['complex_words']=complex_words_length
-    scores['adverbs_count'] = adv_length
+    #scores['adverbs_count'] = adv_length
     scores['politeness']={'polite':round(polite_score[0, 0], 4), "rude": round(polite_score[0, 1], 4)}
-    scores['subjectivity']=round(obj_score_modified[0,1],4)
-    scores['objectivity']=round(obj_score_modified[0,0],4)
+    #scores['subjectivity']=round(obj_score_modified[0,1],4)
+    #scores['objectivity']=round(obj_score_modified[0,0],4)
     scores['tone']={'anger':round(tone_score[0,0],4),'fear':round(tone_score[0,1],4),'joy':round(tone_score[0,2],4),'love':round(tone_score[0,3],4),'sadness':round(tone_score[0,4],4),'surprise':round(tone_score[0,5],4)}
     scores['errors']=errors
     scores['complex_list'] = complexwordslist
-    scores['adverbs_list'] = advs_list
+    #scores['adverbs_list'] = advs_list
     scores['complexity'] = reading_level
 
 
     overall_score = getOverallScore(scores)
     scores['overall_score'] = overall_score
-    print(scores)
+    #print(scores)
     #sentiment = classifier.classify(build_bag_of_words(resList))
     #print(sentiment)
     return json.dumps(scores)
@@ -187,7 +186,7 @@ def removenoise(input):
     res2=[]
     for string in res1:
         res2+=string.split('&')
-    noise=['div','/div','br','nbsp;', 'mark', '/mark', 'style="background-color:#FFCBA4;"', 'style="background-color:#C3FDB8;"']
+    noise=['div','/div','br','nbsp;', 'mark', '/mark', 'style="background-color:#FBBBB9;"', 'style="background-color:#FFFFC2;"', 'style="background-color:#C2DFFF;"']
     result=[x for x in res2 if x not in noise and x]
     finalstr=''
     for string in result:
@@ -209,8 +208,8 @@ def word_count(str_text):
     for token in text:
         if token not in punctuation and token not in punctuation2:
             length += 1
-            print(token)
-            print(length)
+            #print(token)
+            #print(length)
     return length   
 
 def question_count(tokens):
@@ -231,12 +230,12 @@ def createSentenceList(text):
     currSentence=''
     punct=['.','!','?']
     i=0
-    print("here it is")
-    print(text[len(text)-1])
+    #print("here it is")
+    #print(text[len(text)-1])
     if text[len(text) - 1] not in punct:
         text+= "."
-        print("added punctuation")
-        print(text)
+        #print("added punctuation")
+        #print(text)
     while i<len(text):
 
         if text[i] not in punct:
@@ -258,15 +257,15 @@ def getSentenceScores(sentences):
         sentence_length=word_count(sentence)
         complex_words, syl, complexwordslist=getComplexWords(sentence.split())
         scores=sid.polarity_scores(sentence)
-        obj_res,obj_score=obj_clf.predict(tf.transform([sentence])),obj_clf.predict_proba(tf.transform([sentence]))
+        #obj_res,obj_score=obj_clf.predict(tf.transform([sentence])),obj_clf.predict_proba(tf.transform([sentence]))
         tone_res,tone_score=tone_clf.predict(tf_tone.transform([sentence])),tone_clf.predict_proba(tf_tone.transform([sentence]))
         polite_res, polite_score=polite_clf.predict(tf_polite.transform([sentence])), polite_clf.predict_proba(tf_polite.transform([sentence]))
-        obj_score_modified = modifysubjscore(sentence, obj_score,sentence_length)
+        #obj_score_modified = modifysubjscore(sentence, obj_score,sentence_length)
         scores['word_count']=sentence_length
         scores['complex_words']=complex_words
         scores['politeness']={'polite':round(polite_score[0, 0], 4), "rude": round(polite_score[0, 1], 4)}
-        scores['subjectivity']=round(obj_score_modified[0,1],4)
-        scores['objectivity']=round(obj_score_modified[0,0],4)
+        #scores['subjectivity']=round(obj_score_modified[0,1],4)
+        #scores['objectivity']=round(obj_score_modified[0,0],4)
         scores['tone']={'anger':round(tone_score[0,0],4),'fear':round(tone_score[0,1],4),'joy':round(tone_score[0,2],4),'love':round(tone_score[0,3],4),'sadness':round(tone_score[0,4],4),'surprise':round(tone_score[0,5],4)}
         sentenceScores.append(scores)
     return sentenceScores
@@ -300,7 +299,10 @@ def getComplexWords(text):
     ncomplex=0
     ntotal = 0
     complexlist = []
+    #words that the algorithm inorrectly does not classify as complex
     exceptions = ["terrible", "horrible", "laughable", "countable", "probable", "constable", "capable", "audible", "visible", "breakable", "flexible", "plausible", "tangible", "feasible", "palpable", "flammable", "unstable", "winnable", "losable", "mashable", "flappable", "effable", "bendable"]
+    #words that the algorithm incorrectly classifies as complex
+    exceptions2 = ["sometime", "enclosed", "unique"]
     for word in text:
         #word.__str__()
         syllables = 0
@@ -314,7 +316,7 @@ def getComplexWords(text):
                     syllables = syllables + 1
         if len(word) > 0 and syllables == 0 :
             syllables = 1
-        if syllables>=3 or word in exceptions:
+        if (syllables>=3 or word in exceptions) and (word not in exceptions2):
             ncomplex=ncomplex+1
             complexlist.append(word)
         ntotal += syllables
@@ -373,7 +375,7 @@ def getOverallScore(scores):
 
     score_positivity = ((scores["compound"] + 1)/2)*100
 
-    print(score_polite, score_tone, score_complexity)
+    #print(score_polite, score_tone, score_complexity)
     total_score = score_polite*0.25 + score_tone*0.25 + score_complexity*0.25 + score_positivity*0.25
     return round(total_score)
 

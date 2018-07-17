@@ -3,6 +3,7 @@
 <html>
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>-->
 <!--<script src='./extension.js'></script>  -->
 <!-- ---- Include the above in your HEAD tag -------- -->
@@ -11,9 +12,9 @@
 .legend li { float: left; margin-right: 10px; }
 .legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
 /* your colors */
-.legend .complex_words { background-color: #FFCBA4; }
-.legend .rude { background-color: #F7DC6F; }
-.legend .long { background-color: #85C1E9; }
+.legend .complex_words { background-color: #FBBBB9; }
+.legend .rude { background-color: #FFFFC2; }
+.legend .long { background-color: #C2DFFF; }
 
 
 .btn-custom {
@@ -41,6 +42,10 @@
   outline: none;
   box-shadow: none;
 }
+
+.fa-question-circle:hover {
+  cursor: pointer;
+}
 </style>
 
 </head>
@@ -48,7 +53,7 @@
 <div class="container" id='template'>
 <div class="container" id="review">
 
-<div class="container" style="width: 500px">
+<div class="container" style="width: 550px">
     <p id='overall_score'> Overall Score: 0 / 100</p>
 
 </div>
@@ -75,8 +80,8 @@
 </div>
 --->
 
-<div class="container" style="width: 500px" id = "politeness">
-<h6> Politeness <button type="button" class="btn btn-custom btn-xs float-right" id="pol_review" >?</button></h6>
+<div class="container" style="width: 550px" id = "politeness">
+<h6> Politeness <i class="fas fa-question-circle" id = "pol_info" style = "float: right;"></i></h6>
 <div class="alert alert-error collapse" role="alert" id="polalert">
   <span>
     <p id="polreview"></p>
@@ -93,8 +98,8 @@
 </div>
 <br>
 
-<div class="container" style="width: 500px" id = "complexity">
-<h6> Complexity <button type="button" class="btn btn-custom btn-xs float-right" id="complex_review" >?</button></h6>
+<div class="container" style="width: 550px" id = "complexity">
+<h6> Complexity <i class="fas fa-question-circle" id = "comp_info" style = "float: right;"></i></h6>
 <div class="alert alert-error collapse" role="alert" id="complexalert">
   <span>
     <p id="complexreview"></p>
@@ -128,8 +133,8 @@
 --->
 <br>
 
-<div class="container" style="width: 500px" id="tones">
-<h6> Tone <button type="button" class="btn btn-custom btn-xs float-right" id="tone_review" >?</button></h6>
+<div class="container" style="width: 550px" id="tones">
+<h6> Tone <i class="fas fa-question-circle" id = "tone_info" style = "float: right;"></i></h6>
 <div class="alert alert-error collapse" role="alert" id="tonealert">
   <span>
     <p id="tonereview"></p>
@@ -158,15 +163,16 @@
 
 
 </div>
-</div>
 <br>
-<div class="container" style="width: 500px">
+
+</div>
+<div class="container" style="width: 550px">
     <p id='word_count'> Length: 0</p>
 
 </div>
 
 </div>
-<div class="container" style="width: 500px" id = "improvements_legend">
+<div class="container" style="width: 550px" id = "improvements_legend">
    <h6>To edit the email, press the suggestions button again.</h6>
 
    <ul class="legend" id = "legend_list">
@@ -195,7 +201,7 @@
 </ul>
 </div>
 
-<div class="container" style="width: 500px" id="improve_button">
+<div class="container" style="width: 550px" id="improve_button">
    <button type="button" class="btn btn-primary btn-xs float-left" id="corrections">Suggestions</button>
 </div>
 </div>
