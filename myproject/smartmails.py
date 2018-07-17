@@ -276,9 +276,9 @@ def getBadSentences(sentenceScores, sentences):
     i = 0
     while i < len(sentenceScores):
         errors = ""
-        if sentenceScores[i]["politeness"]["rude"] > 0.7:
+        if sentenceScores[i]["politeness"]["rude"] > 0.6:
             errors += "rude"
-        elif sentenceScores[i]["neg"] > 0.7:
+        elif sentenceScores[i]["neg"] > 0.6:
             errors += "negative"
         elif sentenceScores[i]['word_count'] > 25:
             errors += "length"
@@ -371,8 +371,10 @@ def getOverallScore(scores):
 
     score_complexity = (100 - ((max(scores["complexity"] - 50, 0))))
 
+    score_positivity = ((scores["compound"] + 1)/2)*100
+
     print(score_polite, score_tone, score_complexity)
-    total_score = score_polite*0.4 + score_tone*0.4 + score_complexity*0.2
+    total_score = score_polite*0.25 + score_tone*0.25 + score_complexity*0.25 + score_positivity*0.25
     return round(total_score)
 
 '''
