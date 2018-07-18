@@ -4,6 +4,7 @@
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet'>
 <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>-->
 <!--<script src='./extension.js'></script>  -->
 <!-- ---- Include the above in your HEAD tag -------- -->
@@ -12,8 +13,8 @@
 .legend li { float: left; margin-right: 10px; }
 .legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
 /* your colors */
-.legend .complex_words { background-color: #FBBBB9; }
-.legend .rude { background-color: #FFFFC2; }
+.legend .complex_words { background-color: #FFFFC2; }
+.legend .rude { background-color: #FBBBB9; }
 .legend .long { background-color: #C2DFFF; }
 
 
@@ -46,6 +47,42 @@
 .fa-question-circle:hover {
   cursor: pointer;
 }
+
+.newfont {
+  font-size: 16px !important;
+  font-family: 'Roboto' !important;
+  font-weight: 700 !important;
+  }
+
+h6 {
+    font-size: 16px !important;
+  font-family: 'Roboto' !important;
+}
+
+.politejoycomplex {
+  background-color: #4CC552 !important;
+}
+
+.rudeanger {
+  background-color: #F75D59 !important;
+}
+
+.love {
+  background-color: #5CB3FF !important;
+}
+
+.surprise {
+  background-color: #0020C2 !important;
+}
+
+.fear {
+  background-color: #E0B0FF !important;
+}
+
+.sadness {
+  background-color: #FFDB58 !important;
+}
+
 </style>
 
 </head>
@@ -53,7 +90,7 @@
 <div class="container" id='template'>
 <div class="container" id="review">
 
-<div class="container" style="width: 550px">
+<div class="container newfont" style="width: 550px">
     <p id='overall_score'> Overall Score: 0 / 100</p>
 
 </div>
@@ -80,33 +117,33 @@
 </div>
 --->
 
-<div class="container" style="width: 550px" id = "politeness">
+<div class="container" style="width: 550px; font-family: 'Roboto" id = "politeness">
 <h6> Politeness <i class="fas fa-question-circle" id = "pol_info" style = "float: right;"></i></h6>
 <div class="alert alert-error collapse" role="alert" id="polalert">
   <span>
     <p id="polreview"></p>
   </span>
 </div>
-<div class="progress">
-  <div class="progress-bar bg-success" role="progressbar" style="width:0%" id="polite">
+<div class="progress" style = "height: 20px">
+  <div class="progress-bar bg-success newfont politejoycomplex" role="progressbar" style="width:0%; height:20px" id="polite">
     Polite
   </div>
-  <div class="progress-bar bg-danger" role="progressbar" style="width:0%" id="rude">
+  <div class="progress-bar bg-danger newfont rudeanger" role="progressbar" style="width:0%; height:20px" id="rude">
     Rude
   </div>
 </div>
 </div>
 <br>
 
-<div class="container" style="width: 550px" id = "complexity">
-<h6> Complexity <i class="fas fa-question-circle" id = "comp_info" style = "float: right;"></i></h6>
+<div class="container" style="width: 550px; font-family: 'Roboto" id = "complexity">
+<h6> Complexity <i class="fas fa-question-circle" id = "comp_info" style = "float: right"></i></h6>
 <div class="alert alert-error collapse" role="alert" id="complexalert">
   <span>
     <p id="complexreview"></p>
   </span>
 </div>
-<div class="progress">
-  <div class="progress-bar bg-success" role="progressbar" style="width:0%" id="complex">
+<div class="progress" style = "height: 20px">
+  <div class="progress-bar bg-success newfont politejoycomplex" role="progressbar" style="width:0%; height: 20px" id="complex">
     Complexity
   </div>
 </div>
@@ -133,67 +170,69 @@
 --->
 <br>
 
-<div class="container" style="width: 550px" id="tones">
+<div class="container" style="width: 550px; font-family: 'Roboto" id="tones">
 <h6> Tone <i class="fas fa-question-circle" id = "tone_info" style = "float: right;"></i></h6>
 <div class="alert alert-error collapse" role="alert" id="tonealert">
   <span>
     <p id="tonereview"></p>
   </span>
 </div>
-<div class="progress">
-  <div class="progress-bar bg-success" role="progressbar" style="width:0%" id="joy">
+<div class="progress" style = "height: 20px">
+
+  <div class="progress-bar bg-success newfont politejoycomplex" role="progressbar" style="width:0%; height: 20px" id="joy">
     Joy
   </div>
-    <div class="progress-bar bg-info" role="progressbar" style="width:0%" id="love">
+
+  <div class="progress-bar bg-info newfont love" role="progressbar" style="width:0%; height: 20px" id="love">
     Love
   </div>
-  <div class="progress-bar" role="progressbar" style="width:0%" id="surprise">
+
+  <div class="progress-bar newfont surprise" role="progressbar" style="width:0%; height: 20px" id="surprise">
     Surprise
   </div>
-  <div class="progress-bar bg-secondary" style="width:0%" id="fear">
+  <div class="progress-bar bg-secondary newfont fear" style="width:0%; height: 20px" id="fear">
     Fear
   </div>
-  <div class="progress-bar bg-warning" role="progressbar" style="width:0%" id="sadness">
-    Sadness
-  </div>
-  <div class="progress-bar bg-danger" role="progressbar" style="width:0%" id="anger">
+    <div class="progress-bar bg-danger newfont rudeanger" role="progressbar" style="width:0%; height: 20px" id="anger">
     Anger
   </div>
-
-
+  <div class="progress-bar bg-warning newfont sadness" role="progressbar" style="width:0%; height: 20px" id="sadness">
+    Sadness
+  </div>
 
 </div>
 <br>
 
 </div>
-<div class="container" style="width: 550px">
-    <p id='word_count'> Length: 0</p>
+<div class="container newfont" style="width: 550px; font-family: 'Roboto">
+    <h6 id='word_count'> Length: 0</h6>
+    <br>
 
 </div>
 
 </div>
-<div class="container" style="width: 550px" id = "improvements_legend">
-   <h6>To edit the email, press the suggestions button again.</h6>
+<div class="container" style="width: 550px; font-family: 'Roboto'" id = "improvements_legend">
+   <h6 style = "font-weight: bold; font-family: 'Roboto'">To edit the email, press the suggestions button again.</h6>
 
-   <ul class="legend" id = "legend_list">
+   <ul class="legend" id = "legend_list" >
     <table>
       <tr>
         <td>
-
-    <li><span class="complex_words"></span>Complex Words</li>
-  </td>
-</tr>
-<tr>
-  <td>
-
-    <li><span class="rude"></span>Rude</li>
+    <li style = "font-family: 'Roboto'"><span class="rude"></span>Rude</li>
 
   </td>
 </tr>
 <tr>
   <td>
+    <li style = "font-family: 'Roboto'"><span class="complex_words"></span>Complex Words</li>
 
-    <li><span class="long"></span>Long</li>
+
+  </td>
+</tr>
+<tr>
+  <td>
+
+    <li style = "font-family: 'Roboto'"><span class="long"></span>Long</li>
 
   </td>
 </tr>
@@ -201,7 +240,7 @@
 </ul>
 </div>
 
-<div class="container" style="width: 550px" id="improve_button">
+<div class="container" style="width: 550px; font-family: 'Roboto" id="improve_button">
    <button type="button" class="btn btn-primary btn-xs float-left" id="corrections">Suggestions</button>
 </div>
 </div>
