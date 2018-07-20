@@ -143,7 +143,7 @@ def get_post_email_data():
         reading_level = "Not Available"
     else:
         #cast as float for python 2
-        reading_level = 100 - (206.835 - 1.015*(word_count_length/sentence_count)-84.6*(syllable_count/word_count_length))
+        reading_level = round(100 - (206.835 - 1.015*(word_count_length/sentence_count)-84.6*(syllable_count/word_count_length)))
         if reading_level > 100:
             reading_level = 100
         if reading_level < 0:
