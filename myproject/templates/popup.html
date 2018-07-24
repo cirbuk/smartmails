@@ -5,10 +5,11 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet'>
-<script src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
-<script src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
-<script src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
-<script src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+
+
+
+
+
 
 <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>-->
 <!--<script src='./extension.js'></script>  -->
@@ -94,6 +95,18 @@ h6 {
 }
 
 
+.one {
+     width: 40%;
+
+    float: left;
+}
+
+.two {
+      margin-left: 40%;
+
+}
+
+
 </style>
 
 
@@ -104,12 +117,10 @@ h6 {
 
 
 
-  <div class = "sidenav" style = "float: right">
+  <div class = "sidenav" id = "review" style = "float: right; width: 30%">
 
 
 
-
-<div class="container" id="review" style = "width: 400px">
 <br>
 <div class="container newfont" style="width: 400px; float:center">
 
@@ -121,24 +132,42 @@ h6 {
 
 </div>
 <br>
-<div class="container newfont" id = "complex" style="width: 400px; float:center">
 
+<section class = "container">
 
-    <h4 id='complex_heading' style = "text-align: center"> Complexity</h4>
+<div class="container newfont one" id = "complex">
+    <h4 id='complex_heading' style = "text-align: left">Complexity</h4>
+    <h4 id='complex_score' style = "text-align: left; width: 100px">0 / 100</h4>
+
+<br>
+</div>
+
+<div class="container newfont two" id = "length" style = "margin-right: 50px">
+    <h4 id='word_count_heading' style = "text-align: center">Length</h4>
+    <h4 id='word_count' style = "text-align: center">0</h4>
     <br>
-    <h4 id='complex_score' style = "text-align: center">0 / 100</h4>
+</div>
+
+</section>
+
+<div class = "container newfont" style="height: 280px; width: 280px">
+
+<h4 id='word_count_heading' style = "text-align: center">Politeness</h4>
+
+<canvas id = "myChart" width = "280" height = "280"></canvas>
+
+</div>
 
 <br>
 
-</div>
-<div class="container newfont" id = "length" style="width: 400px; font-family: 'Roboto">
-    <h4 id='word_count' style = "text-align: center"> Length: 0</h6>
-    <br>
+
+<div class = "container newfont" style="height: 300px; width: 300px" id = "tones">
+
+<h4 id='word_count_heading' style = "text-align: center">Tone</h4>
+
+<canvas id = "myChart2" width = "300" height = "300"></canvas>
 
 </div>
-
-</div>
-
 
 
 
@@ -163,7 +192,7 @@ h6 {
 </div>
 </div>
 --->
-
+<!---
 <div class="container" style="width: 400px; font-family: 'Roboto" id = "politeness">
 <h6> Politeness <i class="fas fa-question-circle" id = "pol_info" style = "float: right;"></i></h6>
 <div class="alert alert-error collapse" role="alert" id="polalert">
@@ -180,6 +209,7 @@ h6 {
   </div>
 </div>
 </div>
+--->
 
 
 
@@ -201,8 +231,8 @@ h6 {
 </div>
 </div>
 --->
-<br>
 
+<!---
 <div class="container" style="width: 400px; font-family: 'Roboto" id="tones">
 <h6> Tone <i class="fas fa-question-circle" id = "tone_info" style = "float: right;"></i></h6>
 <div class="alert alert-error collapse" role="alert" id="tonealert">
@@ -235,12 +265,14 @@ h6 {
 
 </div>
 <br>
-
+--->
+<div class="container newfont" style="width: 100%; font-family: 'Roboto';" id="improve_button">
+   <button type="button" class="btn btn-primary btn-xs float-center" id="corrections">Suggestions</button>
 </div>
 
+<br>
 
-</div>
-<div class="container" style="width: 400px; font-family: 'Roboto'" id = "improvements_legend">
+<div class="container" style="font-family: 'Roboto'" id = "improvements_legend">
    <h6 style = "font-weight: bold; font-family: 'Roboto'">To edit the email, press the suggestions button again.</h6>
 
    <ul class="legend" id = "legend_list" >
@@ -269,12 +301,7 @@ h6 {
 </ul>
 </div>
 
-<div class="container" style="width: 400px; font-family: 'Roboto" id="improve_button">
-   <button type="button" class="btn btn-primary btn-xs float-left" id="corrections">Suggestions</button>
 </div>
-</div>
-<br>
-<br>
 
 </body>
 </html>

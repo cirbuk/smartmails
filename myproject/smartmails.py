@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, jsonify, render_template
+from flask import Flask, render_template, request, jsonify, render_template, url_for
 import nltk
 import pickle
 import json
 import string
 import spacy
+
 #import sklearn
 nlp = spacy.load('en_core_web_sm')
 
@@ -70,6 +71,7 @@ dic = buildhashtable(wordslist, classlist)
 
 @app.route('/<string:page_name>/')
 def render_static(page_name):
+    url_for('static', filename = 'Chart.js')
     return render_template('%s.html' % page_name)
 
 
