@@ -54,12 +54,12 @@
   cursor: pointer;
 }
 
+
 .newfont {
   font-size: 16px !important;
   font-family: 'Roboto' !important;
-  font-weight: 700 !important;
+  font-weight: 400 !important;
   }
-
 h6 {
     font-size: 16px !important;
   font-family: 'Roboto' !important;
@@ -96,13 +96,14 @@ h6 {
 
 
 .one {
-     width: 40%;
+     width: 50%;
 
     float: left;
 }
 
 .two {
-      margin-left: 40%;
+      width: 50%;
+      float: right;
 
 }
 
@@ -117,57 +118,51 @@ h6 {
 
 
 
-  <div class = "sidenav" id = "review" style = "float: right; width: 30%">
+  <div class = "sidenav" id = "review" style = "float: right; width: 40%; height: 600px; overflow: auto">
 
 
 
 <br>
-<div class="container newfont" style="width: 400px; float:center">
-
-    <h2 id='overall_heading' style = "text-align: center"> Overall Score</h2>
-    <br>
-    <h2 id='overall_score' style = "text-align: center">0 / 100</h2>
-
-<br>
-
-</div>
-<br>
-
-<section class = "container">
-
-<div class="container newfont one" id = "complex">
-    <h4 id='complex_heading' style = "text-align: left">Complexity</h4>
-    <h4 id='complex_score' style = "text-align: left; width: 100px">0 / 100</h4>
-
-<br>
+<div class="container newfont" style="width: 400px; float:center" id = "overall">
+    <h3 id='overall_heading' style = "text-align: left;"><strong>Your Overall Score</strong><span id = "overall_color" style = "color: red"> 0</span> / 100</h3>
 </div>
 
-<div class="container newfont two" id = "length" style = "margin-right: 50px">
-    <h4 id='word_count_heading' style = "text-align: center">Length</h4>
-    <h4 id='word_count' style = "text-align: center">0</h4>
-    <br>
+
+
+<div class="container newfont one" id = "complex" >
+    <h5 id='complex_heading' style = "text-align: left;"><strong>Complexity</strong><span id = "complex_color"> 0</span> / 100</h5>
+
+
 </div>
 
-</section>
+<div class="container newfont two" id = "length">
+    <h5 id='word_count_heading' style = "text-align: center"><strong>Length</strong> 0</h5>
 
-<div class = "container newfont" style="height: 280px; width: 280px">
-
-<h4 id='word_count_heading' style = "text-align: center">Politeness</h4>
-
-<canvas id = "myChart" width = "280" height = "280"></canvas>
 
 </div>
 
 <br>
+<br>
+<br>
 
+<div class = "newfont one" >
 
-<div class = "container newfont" style="height: 300px; width: 300px" id = "tones">
+<h5 id='word_count_heading' style = "text-align: left ">Politeness</h5>
 
-<h4 id='word_count_heading' style = "text-align: center">Tone</h4>
-
-<canvas id = "myChart2" width = "300" height = "300"></canvas>
+<canvas id = "myChart"></canvas>
 
 </div>
+
+<div class = "newfont two" id = "tones" >
+
+<h5 id='word_count_heading' style = "text-align: center">Tone</h5>
+
+<canvas id = "myChart2"></canvas>
+<br>
+<br>
+
+</div>
+
 
 
 
@@ -266,14 +261,21 @@ h6 {
 </div>
 <br>
 --->
+<!---
 <div class="container newfont" style="width: 100%; font-family: 'Roboto';" id="improve_button">
-   <button type="button" class="btn btn-primary btn-xs float-center" id="corrections">Suggestions</button>
+   <button type="button" class="btn btn-primary btn-xs float-center" id="corrections">Get Suggestions</button>
 </div>
+--->
+
+
+<div class = "newfont" id = "detailed_analiysis" style = "text-align: left">
 
 <br>
+  <h3><strong>Detailed Analysis</strong></h3>
 
 <div class="container" style="font-family: 'Roboto'" id = "improvements_legend">
-   <h6 style = "font-weight: bold; font-family: 'Roboto'">To edit the email, press the suggestions button again.</h6>
+  <!---
+   <h6 style = "font-weight: bold; font-family: 'Roboto'">To edit the email, press the suggestions button again.</h6>--->
 
    <ul class="legend" id = "legend_list" >
     <table>
@@ -282,24 +284,32 @@ h6 {
     <li style = "font-family: 'Roboto'"><span class="rude"></span>Rude</li>
 
   </td>
-</tr>
-<tr>
+
   <td>
-    <li style = "font-family: 'Roboto'"><span class="complex_words"></span>Complex Words</li>
+        <li style = "font-family: 'Roboto'"><span class="long"></span>Long</li>
+
+
+
+  </td>
+
+  <td>
+    <li style = "font-family: 'Roboto'; overflow: hidden; white-space: nowrap;"><span class="complex_words"></span>Complex Words</li>
 
 
   </td>
 </tr>
-<tr>
-  <td>
 
-    <li style = "font-family: 'Roboto'"><span class="long"></span>Long</li>
-
-  </td>
-</tr>
 </table>
 </ul>
 </div>
+
+<div class = "container newfont2" id = "text_analysis">
+</div>
+<br>
+
+</div>
+
+
 
 </div>
 

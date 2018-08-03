@@ -302,9 +302,9 @@ def getComplexWords(text):
     ntotal = 0
     complexlist = []
     #words that the algorithm inorrectly does not classify as complex
-    exceptions = ["terrible", "horrible", "laughable", "countable", "probable", "constable", "capable", "audible", "visible", "breakable", "flexible", "plausible", "tangible", "feasible", "palpable", "flammable", "unstable", "winnable", "losable", "mashable", "flappable", "effable", "bendable"]
+    exceptions = ["amazing", "terrible", "horrible", "laughable", "countable", "probable", "constable", "capable", "audible", "visible", "breakable", "flexible", "plausible", "tangible", "feasible", "palpable", "flammable", "unstable", "winnable", "losable", "mashable", "flappable", "effable", "bendable"]
     #words that the algorithm incorrectly classifies as complex
-    exceptions2 = ["sometime", "enclosed", "unique"]
+    exceptions2 = ["sometime", "enclosed", "unique", "aligned"]
     for word in text:
         #word.__str__()
         syllables = 0
