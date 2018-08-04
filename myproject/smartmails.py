@@ -283,6 +283,7 @@ def getBadSentences(sentenceScores, sentences):
             errors += "negative"
         elif sentenceScores[i]['word_count'] > 25:
             errors += "length"
+        print(sentences[i])
 
         result.append([errors, sentences[i][-1], sentences[i].split()[0]])
         i += 1
@@ -304,7 +305,7 @@ def getComplexWords(text):
     #words that the algorithm inorrectly does not classify as complex
     exceptions = ["amazing", "terrible", "horrible", "laughable", "countable", "probable", "constable", "capable", "audible", "visible", "breakable", "flexible", "plausible", "tangible", "feasible", "palpable", "flammable", "unstable", "winnable", "losable", "mashable", "flappable", "effable", "bendable"]
     #words that the algorithm incorrectly classifies as complex
-    exceptions2 = ["sometime", "enclosed", "unique", "aligned"]
+    exceptions2 = ["sometime", "enclosed", "unique", "aligned", "received", "business"]
     for word in text:
         #word.__str__()
         syllables = 0

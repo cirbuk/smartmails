@@ -96,13 +96,13 @@ h6 {
 
 
 .one {
-     width: 46%;
+     width: 50%;
 
     float: left;
 }
 
 .two {
-      width: 54%;
+      width: 50%;
       float: right;
 
 }
@@ -132,10 +132,11 @@ mark {
     <h3 id='overall_heading' style = "text-align: left;"><strong>Your Overall Score</strong><span id = "overall_color" style = "color: red"> 0</span> / 100</h3>
 </div>
 
-
+<br>
+<div id = "subheading">
 
 <div class="container newfont one" id = "complex" >
-    <h5 id='complex_heading' style = "text-align: left;"><strong>Complexity</strong><span id = "complex_color"> 0</span> / 100</h5>
+    <h5 id='complex_heading' style = "text-align: center;"><strong>Complexity</strong><span id = "complex_color" style = "color: red"> 0</span> / 100</h5>
 
 
 </div>
@@ -145,139 +146,44 @@ mark {
 
 
 </div>
+</div>
+<br>
+<br>
+<br>
 
-<br>
-<br>
-<br>
+
+
+<div id = "charts">
 
 <div class = "newfont one">
 
-<h5 id='word_count_heading' style = "text-align: center ">Politeness</h5>
+<h5 id='word_count_heading' style = "text-align: center "><strong>Politeness</strong></h5>
 
-<canvas id = "myChart"></canvas>
+<canvas id = "myChart" height = "200"></canvas>
 
 </div>
 
 <div class = "newfont two" id = "tones">
 
-<h5 id='word_count_heading' style = "text-align: center">Tone</h5>
+<h5 id='word_count_heading' style = "text-align: center"><strong>Tone</strong></h5>
 
-<canvas id = "myChart2"></canvas>
-<br>
-<br>
+<canvas id = "myChart2" height = "200"></canvas>
 
+</div>
 
 </div>
 <br>
-
-
-
-
-<!---
-<div class="container" style="width: 500px", id = "positivity">
-<h6> Positivity <button type="button" class="btn btn-info btn-xs float-right" id="pos_review" >Click</button></h6>
-<div class="alert alert-error collapse" role="alert" id="posalert">
-  <span>
-    <p id="posreview"></p>
-  </span>
-</div>
-<div class="progress">
-  <div class="progress-bar bg-success" role="progressbar" style="width:0%" id="pos">
-    Positive
-  </div>
-  <div class="progress-bar bg-warning" role="progressbar" style="width:0%" id="neu">
-    Neutral
-  </div>
-  <div class="progress-bar bg-danger" role="progressbar" style="width:0%" id="neg">
-    Negative
-  </div>    
-</div>
-</div>
---->
-<!---
-<div class="container" style="width: 400px; font-family: 'Roboto" id = "politeness">
-<h6> Politeness <i class="fas fa-question-circle" id = "pol_info" style = "float: right;"></i></h6>
-<div class="alert alert-error collapse" role="alert" id="polalert">
-  <span>
-    <p id="polreview"></p>
-  </span>
-</div>
-<div class="progress" style = "height: 20px">
-  <div class="progress-bar bg-success newfont politejoycomplex" role="progressbar" style="width:0%; height:20px" id="polite">
-    Polite
-  </div>
-  <div class="progress-bar bg-danger newfont rudeanger" role="progressbar" style="width:0%; height:20px" id="rude">
-    Rude
-  </div>
-</div>
-</div>
---->
-
-
-
-<!---
-<div class="container" style="width: 500px" id = "subjectivity">
-<h6> Subjectivity <button type="button" class="btn btn-info btn-xs float-right" id="subj_review">Click</button></h6>
-<div class="alert alert-error collapse" role="alert" id="subjalert">
-  <span>
-    <p id="subjreview"></p>
-  </span>
-</div>
-<div class="progress">
-  <div class="progress-bar bg-success" role="progressbar" style="width:50%" id="subj">
-    Subjective
-  </div>
-  <div class="progress-bar bg-danger" role="progressbar" style="width:50%" id="obj">
-    Objective
-  </div>
-</div>
-</div>
---->
-
-<!---
-<div class="container" style="width: 400px; font-family: 'Roboto" id="tones">
-<h6> Tone <i class="fas fa-question-circle" id = "tone_info" style = "float: right;"></i></h6>
-<div class="alert alert-error collapse" role="alert" id="tonealert">
-  <span>
-    <p id="tonereview"></p>
-  </span>
-</div>
-<div class="progress" style = "height: 20px">
-
-  <div class="progress-bar bg-success newfont politejoycomplex" role="progressbar" style="width:0%; height: 20px" id="joy">
-    Joy
-  </div>
-
-  <div class="progress-bar bg-info newfont love" role="progressbar" style="width:0%; height: 20px" id="love">
-    Love
-  </div>
-
-  <div class="progress-bar newfont surprise" role="progressbar" style="width:0%; height: 20px" id="surprise">
-    Surprise
-  </div>
-  <div class="progress-bar bg-secondary newfont fear" style="width:0%; height: 20px" id="fear">
-    Fear
-  </div>
-    <div class="progress-bar bg-danger newfont rudeanger" role="progressbar" style="width:0%; height: 20px" id="anger">
-    Anger
-  </div>
-  <div class="progress-bar bg-warning newfont sadness" role="progressbar" style="width:0%; height: 20px" id="sadness">
-    Sadness
-  </div>
-
-</div>
 <br>
---->
-<!---
-<div class="container newfont" style="width: 100%; font-family: 'Roboto';" id="improve_button">
-   <button type="button" class="btn btn-primary btn-xs float-center" id="corrections">Get Suggestions</button>
-</div>
---->
-
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 <div class = "newfont" id = "detailed_analiysis" style = "text-align: left">
-
-<br>
 
   <h3><strong>Detailed Analysis</strong></h3>
 
