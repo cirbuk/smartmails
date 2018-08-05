@@ -97,13 +97,13 @@ h6 {
 
 
 .one {
-     width: 50%;
+     width: 45%;
 
     float: left;
 }
 
 .two {
-      width: 50%;
+      width: 45%;
       float: right;
 
 }
@@ -160,7 +160,7 @@ mark {
 
 <h5 id='word_count_heading' style = "text-align: center "><strong>Politeness</strong></h5>
 
-<canvas id = "myChart" height = "200"></canvas>
+<canvas id = "myChart" height = "75" width = "75"></canvas>
 
 </div>
 
@@ -168,7 +168,7 @@ mark {
 
 <h5 id='word_count_heading' style = "text-align: center"><strong>Tone</strong></h5>
 
-<canvas id = "myChart2" height = "200"></canvas>
+<canvas id = "myChart2" height = "75" width = "75"></canvas>
 
 </div>
 
@@ -183,48 +183,28 @@ mark {
 <br>
 <br>
 <br>
-
-<div class = "newfont" id = "detailed_analiysis" style = "text-align: left">
+<br>
+<br>
+<br>
 
   <h3><strong>Detailed Analysis</strong></h3>
 
+   <ul class="legend" id = "legend_list" style = "padding: 0 !important;">
 
-<div style="font-family: 'Roboto'" id = "improvements_legend">
-  <!---
-   <h6 style = "font-weight: bold; font-family: 'Roboto'">To edit the email, press the suggestions button again.</h6>--->
+    <li style = "font-family: 'Roboto'; text-align: 'left'"><span class="rude"></span>Rude</li>
 
-   <ul class="legend" id = "legend_list" >
-    <table>
-      <tr>
-        <td>
-    <li style = "font-family: 'Roboto'"><span class="rude"></span>Rude</li>
-  </td>
+    <li style = "font-family: 'Roboto'; text-align: 'left'"><span class="long"></span>Long</li>
 
-  <td>
-        <li style = "font-family: 'Roboto'"><span class="long"></span>Long</li>
+    <li style = "font-family: 'Roboto'; text-align: 'left'"><span class="complex_words"></span>Complex Words</li>
 
-
-
-  </td>
-
-  <td>
-    <li style = "font-family: 'Roboto'"><span class="complex_words"></span>Complex Words</li>
-
-
-  </td>
-</tr>
-
-</table>
 </ul>
-</div>
+
+
+<br>
 
 <div class = "container newfont2" id = "text_analysis">
 </div>
 <br>
-
-</div>
-
-
 
 </div>
 
