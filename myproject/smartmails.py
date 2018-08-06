@@ -247,7 +247,7 @@ def getBadSentences(sentenceScores, sentences):
 
         elif sentenceScores[i]['word_count'] > 25:
             errors += "length"
-        print(sentences[i])
+        #print(sentences[i])
 
         result.append([errors, sentences[i][-1], sentences[i].split()[0]])
         i += 1
