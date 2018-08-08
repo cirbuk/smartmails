@@ -8,8 +8,6 @@ import re
 
 nlp = spacy.load('en_core_web_sm')
 
-
-import nltk
 nltk.download('wordnet')
 nltk.download('vader_lexicon')
 
@@ -17,10 +15,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.externals import joblib
 from sklearn.metrics import accuracy_score
 from sklearn.linear_model import SGDClassifier
-
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-
 from flask_cors import CORS
+
 app = Flask(__name__)
 CORS(app)
 
@@ -53,8 +50,6 @@ def buildhashtable(wordlist, classlist):
         i += 1
     return dic
 
-
-
 wordslist, classlist = getwordslist()
 dic = buildhashtable(wordslist, classlist)
 
@@ -63,13 +58,11 @@ def render_static(page_name):
     url_for('static', filename = 'Chart.js')
     return render_template('%s.html' % page_name)
 
-
-
 @app.route('/postmethod', methods = ['POST'])
 def get_post_email_data():
     jsdata = request.form['data']
     noisefreedata = removenoise(jsdata)
-    '''adv_length = 0
+    adv_length = 0
     advs_list = []
     exceptions = ["why"]
     doc = nlp(noisefreedata)
@@ -77,7 +70,7 @@ def get_post_email_data():
         text = token.text
         if token.pos_ == "ADV" and text[len(text) - 1:] == "y" and token.text not in exceptions:
             adv_length += 1
-            advs_list.append(str(token.text))'''
+            advs_list.append(str(token.text))
 
     word_count_length = word_count(noisefreedata)
     tokens = nltk.tokenize.TreebankWordTokenizer()
@@ -88,11 +81,8 @@ def get_post_email_data():
         return json.dumps({})
 
     sentences= createSentenceList(noisefreedata)
-
-
     question_count_length = question_count(resList)
     processedData=getPunctFreeString(resList)
-
     sid=SentimentIntensityAnalyzer()
     scores=sid.polarity_scores(processedData)
     tone_res,tone_score=tone_clf.predict(tf_tone.transform([processedData])),tone_clf.predict_proba(tf_tone.transform([processedData]))
@@ -132,21 +122,16 @@ def get_post_email_data():
     scores['complex_list'] = complexwordslist
     #scores['adverbs_list'] = advs_list
     scores['complexity'] = reading_level
-
-
     overall_score = getOverallScore(scores)
     scores['overall_score'] = overall_score
     print(scores)
 
     return json.dumps(scores)
 
-
-
 def removenoise(input):
+    #gets rid of html tags
     cleanr = re.compile('<.*?>')
     cleantext = re.sub(cleanr, '', input)
-
-
     l=cleantext.split()
     res=[]
     for string in l:
@@ -179,8 +164,6 @@ def word_count(str_text):
     for token in text:
         if token not in punctuation and token not in punctuation2:
             length += 1
-            #print(token)
-            #print(length)
     return length   
 
 def question_count(tokens):
@@ -201,14 +184,9 @@ def createSentenceList(text):
     currSentence=''
     punct=['.','!','?']
     i=0
-    #print("here it is")
-    #print(text[len(text)-1])
     if text[len(text) - 1] not in punct:
         text+= "."
-        #print("added punctuation")
-        #print(text)
     while i<len(text):
-
         if text[i] not in punct:
             currSentence+=text[i]
             i+=1
@@ -218,7 +196,6 @@ def createSentenceList(text):
             while i<len(text) and text[i] in punct:
                 i+=1
             currSentence=''
-
     return sentences
 
 def getSentenceScores(sentences):
@@ -244,14 +221,10 @@ def getBadSentences(sentenceScores, sentences):
         errors = ""
         if sentenceScores[i]["politeness"]["rude"] > 0.6:
             errors += "rude"
-
         elif sentenceScores[i]['word_count'] > 25:
             errors += "length"
-        #print(sentences[i])
-
         result.append([errors, sentences[i][-1], sentences[i].split()[0]])
         i += 1
-
     return result
 
 def getPunctFreeString(list):
@@ -288,9 +261,6 @@ def getComplexWords(text):
         ntotal += syllables
     return ncomplex, ntotal, complexlist
 
-
-
-
 def modifysubjscore(text, score, wordcount):
     subjlen = 0
     objlen = 0
@@ -310,7 +280,6 @@ def modifysubjscore(text, score, wordcount):
     else:
         score[0, 0] += subj_diff
         score[0, 1] -= subj_diff
-
     if score[0,0] > 1:
         score[0, 0] = 1
         score[0, 1] = 0
@@ -319,17 +288,14 @@ def modifysubjscore(text, score, wordcount):
         score[0, 0] = 0
     return score
 
-
 def getOverallScore(scores):
     total_score = 0
-
     love_score = max(scores["tone"]["love"] - 0.175, 0);
     joy_score = max(scores["tone"]["joy"] - 0.175, 0);
     surprise_score = max(scores["tone"]["surprise"] - 0.175, 0);
     fear_score = max(scores["tone"]["fear"] - 0.175, 0);
     anger_score = max(scores["tone"]["anger"] - 0.175, 0);
     sadness_score = max(scores["tone"]["sadness"] - 0.175, 0);
-
     tone_score = love_score + joy_score + surprise_score + fear_score + anger_score + sadness_score;
     score_polite = scores["politeness"]["polite"]*100
     score_tone = ((love_score/tone_score) + (joy_score/tone_score) + (surprise_score/tone_score))*100
@@ -338,7 +304,6 @@ def getOverallScore(scores):
     total_score = score_polite*0.25 + score_tone*0.25 + score_complexity*0.25 + score_positivity*0.25
     return round(total_score)
 
-
-
 if __name__ == '__main__':
     app.run(debug = True)
+    
