@@ -25,33 +25,7 @@ tone_clf=pickle.load(open('training_models/tone/tone_clf.joblib.pkl',"rb"), enco
 polite_clf=pickle.load(open('training_models/politeness/classifier.joblib.pkl',"rb"), encoding = "latin1")
 tf_tone=pickle.load(open('training_models/tone/vectorizer.joblib.pkl',"rb"), encoding = "latin1")
 tf_polite=pickle.load(open('training_models/politeness/vectorizer.joblib.pkl', "rb"), encoding = "latin1")
-wordslist = []
-classlist = []
 
-def getwordslist():
-    file = open("subjwords.txt", "r")
-    listwords = file.readlines()
-    words = []
-    classification = []
-    for item in listwords:
-        if item[5] == "s":
-            classification.append(item[5:15])
-        if item[5] == "w":
-            classification.append(item[5:13])
-        items = item.split()
-        words.append(items[2][6:])
-    return words, classification
-
-def buildhashtable(wordlist, classlist):
-    dic = {}
-    i = 0
-    for word in wordlist:
-        dic[word] = classlist[i]
-        i += 1
-    return dic
-
-wordslist, classlist = getwordslist()
-dic = buildhashtable(wordslist, classlist)
 
 @app.route('/<string:page_name>/')
 def render_static(page_name):
@@ -62,37 +36,28 @@ def render_static(page_name):
 def get_post_email_data():
     jsdata = request.form['data']
     noisefreedata = removenoise(jsdata)
-    adv_length = 0
-    advs_list = []
-    exceptions = ["why"]
-    doc = nlp(noisefreedata)
-    for token in doc:
-        text = token.text
-        if token.pos_ == "ADV" and text[len(text) - 1:] == "y" and token.text not in exceptions:
-            adv_length += 1
-            advs_list.append(str(token.text))
-
     word_count_length = word_count(noisefreedata)
     tokens = nltk.tokenize.TreebankWordTokenizer()
     tokenlist = tokens.tokenize(noisefreedata)
     resList = lemmatizeText(tokenlist)
-
     if resList==[]:
         return json.dumps({})
 
     sentences= createSentenceList(noisefreedata)
-    question_count_length = question_count(resList)
+
     processedData=getPunctFreeString(resList)
+
     sid=SentimentIntensityAnalyzer()
     scores=sid.polarity_scores(processedData)
+
     tone_res,tone_score=tone_clf.predict(tf_tone.transform([processedData])),tone_clf.predict_proba(tf_tone.transform([processedData]))
     polite_res, polite_score=polite_clf.predict(tf_polite.transform([processedData])), polite_clf.predict_proba(tf_polite.transform([processedData]))
+    
+
     sentenceScores=getSentenceScores(sentences)
     sentence_count = len(sentences)
     errors = getBadSentences(sentenceScores, sentences)
-    i=0
-    for item in sentenceScores:
-        i+=1
+
 
     complex_words_length, syllable_count, complexwordslist = getComplexWords(resList)
 
@@ -111,16 +76,12 @@ def get_post_email_data():
     scores['word_count']=word_count_length
     scores['sentence_count'] = sentence_count
     scores['syllable_count'] = syllable_count
-    #scores['question_count']=question_count_length
     scores['complex_words']=complex_words_length
-    #scores['adverbs_count'] = adv_length
     scores['politeness']={'polite':round(polite_score[0, 0], 4), "rude": round(polite_score[0, 1], 4)}
-    #scores['subjectivity']=round(obj_score_modified[0,1],4)
-    #scores['objectivity']=round(obj_score_modified[0,0],4)
+
     scores['tone']={'anger':round(tone_score[0,0],4),'fear':round(tone_score[0,1],4),'joy':round(tone_score[0,2],4),'love':round(tone_score[0,3],4),'sadness':round(tone_score[0,4],4),'surprise':round(tone_score[0,5],4)}
     scores['errors']=errors
     scores['complex_list'] = complexwordslist
-    #scores['adverbs_list'] = advs_list
     scores['complexity'] = reading_level
     overall_score = getOverallScore(scores)
     scores['overall_score'] = overall_score
@@ -165,18 +126,6 @@ def word_count(str_text):
             length += 1
     return length   
 
-def question_count(tokens):
-    i = 0
-    count = 0
-    while i < len(tokens):
-        if tokens[i] == "?":
-            i += 1
-            count += 1
-            while i < len(tokens) and tokens[i] == "?":
-                i += 1
-        else:
-            i += 1
-    return count
 
 def createSentenceList(text):
     sentences=[]
@@ -260,32 +209,6 @@ def getComplexWords(text):
         ntotal += syllables
     return ncomplex, ntotal, complexlist
 
-def modifysubjscore(text, score, wordcount):
-    subjlen = 0
-    objlen = 0
-    words = []
-    words = text.split()
-    for word in words:
-        if dic.get(word) == "strongsubj":
-            subjlen += 1
-        if dic.get(word) == "weaksubj":
-            objlen += 1
-    subj_ratio = float(subjlen) / wordcount
-    obj_ratio = float(objlen) / wordcount
-    subj_diff = abs(subj_ratio - obj_ratio)
-    if subj_ratio > obj_ratio:
-        score[0, 1] += subj_diff
-        score[0, 0] -= subj_diff
-    else:
-        score[0, 0] += subj_diff
-        score[0, 1] -= subj_diff
-    if score[0,0] > 1:
-        score[0, 0] = 1
-        score[0, 1] = 0
-    if score[0, 1] > 1:
-        score[0, 1] = 1
-        score[0, 0] = 0
-    return score
 
 def getOverallScore(scores):
     total_score = 0
@@ -301,6 +224,7 @@ def getOverallScore(scores):
     score_tone = ((love_score/tone_score) + (joy_score/tone_score) + (surprise_score/tone_score))*100
     score_complexity = (100 - ((max(scores["complexity"] - 50, 0))))
     score_positivity = ((scores["compound"] + 1)/2)*100
+
     total_score = score_polite*0.25 + score_tone*0.25 + score_complexity*0.25 + score_positivity*0.25
     return round(total_score)
 
