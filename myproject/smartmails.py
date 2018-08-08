@@ -68,10 +68,8 @@ def render_static(page_name):
 @app.route('/postmethod', methods = ['POST'])
 def get_post_email_data():
     jsdata = request.form['data']
-
-    
     noisefreedata = removenoise(jsdata)
-    adv_length = 0
+    '''adv_length = 0
     advs_list = []
     exceptions = ["why"]
     doc = nlp(noisefreedata)
@@ -79,7 +77,7 @@ def get_post_email_data():
         text = token.text
         if token.pos_ == "ADV" and text[len(text) - 1:] == "y" and token.text not in exceptions:
             adv_length += 1
-            advs_list.append(str(token.text))
+            advs_list.append(str(token.text))'''
 
     word_count_length = word_count(noisefreedata)
     tokens = nltk.tokenize.TreebankWordTokenizer()
@@ -94,9 +92,6 @@ def get_post_email_data():
 
     question_count_length = question_count(resList)
     processedData=getPunctFreeString(resList)
-
-
-
 
     sid=SentimentIntensityAnalyzer()
     scores=sid.polarity_scores(processedData)
@@ -141,7 +136,7 @@ def get_post_email_data():
 
     overall_score = getOverallScore(scores)
     scores['overall_score'] = overall_score
-    #print(scores)
+    print(scores)
 
     return json.dumps(scores)
 
@@ -272,7 +267,7 @@ def getComplexWords(text):
     ntotal = 0
     complexlist = []
     #words that the algorithm inorrectly does not classify as complex
-    exceptions = ["amazing", "terrible", "horrible", "laughable", "countable", "probable", "constable", "capable", "audible", "visible", "breakable", "flexible", "plausible", "tangible", "feasible", "palpable", "flammable", "unstable", "winnable", "losable", "mashable", "flappable", "effable", "bendable", "idiot"]
+    exceptions = ["amazing", "terrible", "horrible", "laughable", "countable", "probable", "constable", "capable", "audible", "visible", "breakable", "flexible", "plausible", "tangible", "feasible", "palpable", "flammable", "unstable", "winnable", "losable", "mashable", "flappable", "effable", "bendable", "idiot", "arable"]
     #words that the algorithm incorrectly classifies as complex
     exceptions2 = ["sometime", "enclosed", "unique", "aligned", "received", "business"]
     for word in text:
