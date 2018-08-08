@@ -289,14 +289,15 @@ def modifysubjscore(text, score, wordcount):
 
 def getOverallScore(scores):
     total_score = 0
-    love_score = max(scores["tone"]["love"] - 0.175, 0);
-    joy_score = max(scores["tone"]["joy"] - 0.175, 0);
-    surprise_score = max(scores["tone"]["surprise"] - 0.175, 0);
-    fear_score = max(scores["tone"]["fear"] - 0.175, 0);
-    anger_score = max(scores["tone"]["anger"] - 0.175, 0);
-    sadness_score = max(scores["tone"]["sadness"] - 0.175, 0);
+    love_score = max(scores["tone"]["love"] - 0.167, 0);
+    joy_score = max(scores["tone"]["joy"] - 0.167, 0);
+    surprise_score = max(scores["tone"]["surprise"] - 0.167, 0);
+    fear_score = max(scores["tone"]["fear"] - 0.167, 0);
+    anger_score = max(scores["tone"]["anger"] - 0.167, 0);
+    sadness_score = max(scores["tone"]["sadness"] - 0.167, 0);
     tone_score = love_score + joy_score + surprise_score + fear_score + anger_score + sadness_score;
     score_polite = scores["politeness"]["polite"]*100
+    #give emails with strong love, joy, and surprise a higher overall score
     score_tone = ((love_score/tone_score) + (joy_score/tone_score) + (surprise_score/tone_score))*100
     score_complexity = (100 - ((max(scores["complexity"] - 50, 0))))
     score_positivity = ((scores["compound"] + 1)/2)*100
