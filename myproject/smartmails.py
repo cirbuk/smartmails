@@ -4,6 +4,7 @@ import pickle
 import json
 import string
 import spacy
+import re
 
 nlp = spacy.load('en_core_web_sm')
 
@@ -147,7 +148,11 @@ def get_post_email_data():
 
 
 def removenoise(input):
-    l=input.split()
+    cleanr = re.compile('<.*?>')
+    cleantext = re.sub(cleanr, '', input)
+
+
+    l=cleantext.split()
     res=[]
     for string in l:
         res+=string.split('<')
