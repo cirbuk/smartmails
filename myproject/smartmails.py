@@ -124,7 +124,6 @@ def get_post_email_data():
     scores['complexity'] = reading_level
     overall_score = getOverallScore(scores)
     scores['overall_score'] = overall_score
-    print(scores)
 
     return json.dumps(scores)
 
@@ -306,4 +305,3 @@ def getOverallScore(scores):
 
 if __name__ == '__main__':
     app.run(debug = True)
-    
